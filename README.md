@@ -67,6 +67,18 @@ ProjectSettings/         # Unity 项目配置
 
 ## 🚀 启动方式
 
+### 方式一：直接运行打包版（推荐体验）
+
+如果你只是想快速体验原型，不需要安装 Unity：
+
+1. 在项目目录下找到打包文件：
+   ```
+   Builds/PC/DefeatMusicManiac.exe
+   ```
+2. 双击运行即可
+
+> ⚠️ 打包文件体积较大（~500MB+），已排除在 Git 版本控制外。如果需要分享打包版本，建议通过 GitHub Releases 上传。
+
 ### 方式一：从 Unity Editor 启动（推荐开发/测试）
 
 1. **克隆仓库**
