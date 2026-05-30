@@ -1,0 +1,1384 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6dc192fc09ebd642881e0850fea3934, type: 3}
+  m_Name: MusicManiacConfigDatabase
+  m_EditorClassIdentifier: 
+  characterAnimations:
+  - displayName: "AI\u89D2\u8272"
+    assetId: characters/hero_music_maniac
+    monsterKind: 0
+    isHero: 1
+    worldHeight: 1.25
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1583744234751233719, guid: c85c9d0d5cde95344a9688176bb0f0ab, type: 3}
+        worldSize: {x: 1.0197368, y: 1.25}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u566A\u70B9\u5C0F\u602A"
+    assetId: characters/monster_noise_blob
+    monsterKind: 0
+    isHero: 0
+    worldHeight: 0.9
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -7399963030118254918, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -2501191548790262121, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5452156304469582676, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -4536028334599539912, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: -2423034540336965219, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: 8479087738510037234, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C5\u5E27"
+        sprite: {fileID: -765048554733775650, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -8132536209988749531, guid: e3cd1d9acab77124ba72530e7080b271, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5004093467561242308, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -7524138999278449696, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 5557243735814711353, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: -4824884258431970454, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 2110573153422343245, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: 281640618091761106, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 281640618091761106, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: 6846453058035941668, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C5\u5E27"
+        sprite: {fileID: -7807155017760087989, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C6\u5E27"
+        sprite: {fileID: 8749476527465401815, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C7\u5E27"
+        sprite: {fileID: -8935386898246767920, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1070406328396751613, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: 2876428785023769337, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 2789757340519144921, guid: 99918d51bb909474ea72ff7b8344e87f, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -8132536209988749531, guid: e3cd1d9acab77124ba72530e7080b271, type: 3}
+        worldSize: {x: 1.1886792, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u6BD2\u6DB2\u6B4C\u8005"
+    assetId: characters/monster_venom_singer
+    monsterKind: 1
+    isHero: 0
+    worldHeight: 0.85
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -7675034854904577476, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -307520809148108619, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 1802151739940272442, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 1293510027119939345, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -3974731916816741139, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 706904174041350574, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: 3956059093378829132, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -8334089239750389359, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -3597964849079384410, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: -8372184678870599449, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: -5740171536966582079, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C5\u5E27"
+        sprite: {fileID: 1950796179783362731, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C6\u5E27"
+        sprite: {fileID: -3898833542553261524, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 1480139260911385084, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -1768515795579496435, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: -1768515795579496435, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: -8431053603349213113, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2644397012825059230, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -8945266757866782784, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: -7040848331083437867, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: 3577200227551572648, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C5\u5E27"
+        sprite: {fileID: 804413131628841542, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C6\u5E27"
+        sprite: {fileID: 4947938683781402325, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C7\u5E27"
+        sprite: {fileID: 7676371953100954432, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4255993858314009229, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C2\u5E27"
+        sprite: {fileID: -6296515685267052813, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C3\u5E27"
+        sprite: {fileID: 290186122545028354, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C4\u5E27"
+        sprite: {fileID: 3567622281487481, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+      - frameName: "\u7B2C5\u5E27"
+        sprite: {fileID: 8430653919811626052, guid: 1b18d6d4b534f6344a9ff55686266eb5, type: 3}
+        worldSize: {x: 1, y: 1}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4237385266321500652, guid: 2ee499776f4d49b4e9b2a59e9cc82a36, type: 3}
+        worldSize: {x: 0.69214284, y: 0.85}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u78C1\u5E26\u5C04\u624B"
+    assetId: characters/monster_cassette_thrower
+    monsterKind: 2
+    isHero: 0
+    worldHeight: 0.9
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 8346633278637868197, guid: 9cad4cd0f4ffed145b8bca28579535a5, type: 3}
+        worldSize: {x: 1.3499999, y: 0.9}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u97F3\u7BB1\u91CD\u536B"
+    assetId: characters/monster_speaker_brute
+    monsterKind: 3
+    isHero: 0
+    worldHeight: 1.05
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -1196229491680217485, guid: 7b610a7a17e11b443aaa1e560ee81fc8, type: 3}
+        worldSize: {x: 0.86081076, y: 1.05}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u8282\u62CD\u5DEB\u5E08"
+    assetId: characters/monster_metronome_wizard
+    monsterKind: 4
+    isHero: 0
+    worldHeight: 0.95
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -2274893603299700904, guid: 69672fb15e683e94abd2597070197a21, type: 3}
+        worldSize: {x: 0.6242857, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u8C03\u97F3\u53C9\u7834\u76FE\u8005"
+    assetId: characters/monster_tuning_fork_breaker
+    monsterKind: 5
+    isHero: 0
+    worldHeight: 0.95
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 5603206702979950307, guid: 518827dc8fdb6d548b0463d4c09c5e18, type: 3}
+        worldSize: {x: 0.68314606, y: 0.95}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u7EBF\u7F06\u523A\u5BA2"
+    assetId: characters/monster_cable_assassin
+    monsterKind: 6
+    isHero: 0
+    worldHeight: 0.88
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: -5244155484455633610, guid: 142ace342290a8e43b334a866cc001c7, type: 3}
+        worldSize: {x: 1.0359493, y: 0.88}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  - displayName: "\u5931\u771F\u4E4B\u738B"
+    assetId: characters/monster_distortion_king
+    monsterKind: 7
+    isHero: 0
+    worldHeight: 1.45
+    actions:
+    - action: 0
+      displayName: "\u5F85\u673A"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 1
+      displayName: "\u79FB\u52A8"
+      framesPerSecond: 8
+      loop: 1
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 2
+      displayName: "\u653B\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 3
+      displayName: "\u53D7\u51FB"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 4
+      displayName: "\u6B7B\u4EA1"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 5
+      displayName: "\u51FA\u751F"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+    - action: 6
+      displayName: "\u65BD\u6CD5"
+      framesPerSecond: 8
+      loop: 0
+      frames:
+      - frameName: "\u7B2C1\u5E27"
+        sprite: {fileID: 4074016635907468431, guid: ee324059139809e49868954d778ec223, type: 3}
+        worldSize: {x: 1.4689543, y: 1.45}
+        pivot: {x: 0.5, y: 0.5}
+        offset: {x: 0, y: 0}
+        duration: 0.12
+  projectileVisuals:
+  - displayName: "\u57FA\u7840\u97F3\u7B26\u5F39"
+    element: 0
+    projectileSprite: {fileID: -6106464469248276759, guid: c0978b70e2a9b054f9f956f17012c90a, type: 3}
+    sizeMultiplier: 1.2
+    rotateToDirection: 1
+    trailSprite: {fileID: 0}
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+  - displayName: "\u95EA\u7535\u97F3\u7B26\u5F39"
+    element: 1
+    projectileSprite: {fileID: -5165388186957438923, guid: 42ef42104b02dab458b3c744b5490b90, type: 3}
+    sizeMultiplier: 1.28
+    rotateToDirection: 1
+    trailSprite: {fileID: 0}
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+  - displayName: "\u51B0\u51BB\u97F3\u7B26\u5F39"
+    element: 2
+    projectileSprite: {fileID: -7834549566887547556, guid: d08e3ed11857e544a8ef97ecfcae4387, type: 3}
+    sizeMultiplier: 1.28
+    rotateToDirection: 1
+    trailSprite: {fileID: 0}
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+  - displayName: "\u706B\u7130\u97F3\u7B26\u5F39"
+    element: 3
+    projectileSprite: {fileID: -9176492672018345401, guid: 605db3ee2841e254aad5ee1c230dadc3, type: 3}
+    sizeMultiplier: 1.34
+    rotateToDirection: 1
+    trailSprite: {fileID: 0}
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+  - displayName: "\u6BD2\u6C14\u97F3\u7B26\u5F39"
+    element: 4
+    projectileSprite: {fileID: -6915872092848393995, guid: 82d82bd5f85202c419d405c9777e86c9, type: 3}
+    sizeMultiplier: 1.28
+    rotateToDirection: 1
+    trailSprite: {fileID: 0}
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    tint: {r: 1, g: 1, b: 1, a: 1}
+  damageVisuals:
+  - displayName: "\u666E\u901A\u4F24\u5BB3"
+    damageType: 0
+    textColor: {r: 0.94, g: 0.96, b: 0.92, a: 1}
+    fontSize: 18
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u706B\u7130\u4F24\u5BB3"
+    damageType: 1
+    textColor: {r: 1, g: 0.34, b: 0.08, a: 1}
+    fontSize: 19
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u51B0\u51BB\u4F24\u5BB3"
+    damageType: 2
+    textColor: {r: 0.58, g: 0.9, b: 1, a: 1}
+    fontSize: 18
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u95EA\u7535\u66B4\u51FB"
+    damageType: 3
+    textColor: {r: 0.45, g: 0.68, b: 1, a: 1}
+    fontSize: 22
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u6BD2\u6C14DOT"
+    damageType: 4
+    textColor: {r: 0.36, g: 0.95, b: 0.24, a: 1}
+    fontSize: 15
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u97F3\u6CE2AOE"
+    damageType: 5
+    textColor: {r: 0.88, g: 0.46, b: 1, a: 1}
+    fontSize: 20
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: -6000733676362589206, guid: b68d348813ca57d4c9bdcbe7537b18b8, type: 3}
+    hitSfx: {fileID: 0}
+  - displayName: "\u7834\u76FE\u4F24\u5BB3"
+    damageType: 7
+    textColor: {r: 0.22, g: 0.86, b: 1, a: 1}
+    fontSize: 22
+    floatHeight: 0.92
+    lifetime: 0.78
+    mergeFrequentNumbers: 1
+    showKillPrefix: 1
+    hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    hitSfx: {fileID: 0}
+  aoeVfx:
+  - displayName: "\u6280\u80FD\u9884\u8B66\u5706"
+    effectId: warning_ring
+    sprite: {fileID: 6678595809175824887, guid: 240ab08669a556a49a1de3205709bdb8, type: 3}
+    radiusMultiplier: 1
+    duration: 0.8
+    tint: {r: 1, g: 0.25, b: 0.15, a: 0.82}
+    loop: 0
+    sortingOrder: 16
+    matchDamageRadius: 1
+    disableLensDistortion: 0
+  - displayName: "\u97F3\u6CE2\u51B2\u51FB\u73AF"
+    effectId: sonic_ring
+    sprite: {fileID: -6000733676362589206, guid: b68d348813ca57d4c9bdcbe7537b18b8, type: 3}
+    radiusMultiplier: 1
+    duration: 0.35
+    tint: {r: 0.88, g: 0.46, b: 1, a: 1}
+    loop: 0
+    sortingOrder: 16
+    matchDamageRadius: 1
+    disableLensDistortion: 0
+  - displayName: "\u547D\u4E2D\u706B\u82B1"
+    effectId: hit_spark
+    sprite: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
+    radiusMultiplier: 1
+    duration: 0.22
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    loop: 0
+    sortingOrder: 16
+    matchDamageRadius: 0
+    disableLensDistortion: 0
+  - displayName: "\u6B7B\u4EA1\u566A\u6CE2"
+    effectId: death_noise
+    sprite: {fileID: 9035601635743208976, guid: e42ce1a33866ac7438234cac685a6588, type: 3}
+    radiusMultiplier: 1
+    duration: 0.42
+    tint: {r: 0.95, g: 0.48, b: 1, a: 1}
+    loop: 0
+    sortingOrder: 16
+    matchDamageRadius: 0
+    disableLensDistortion: 1
+  - displayName: "\u51FA\u751F\u70DF\u96FE"
+    effectId: spawn_smoke
+    sprite: {fileID: -815058825664960019, guid: 7fdbd773242382c4390066505625b552, type: 3}
+    radiusMultiplier: 1
+    duration: 0.45
+    tint: {r: 1, g: 1, b: 1, a: 1}
+    loop: 0
+    sortingOrder: 16
+    matchDamageRadius: 0
+    disableLensDistortion: 0
+  - displayName: "\u6BD2\u6C14\u533A\u57DF"
+    effectId: poison_area
+    sprite: {fileID: 2129986117492601407, guid: 648c4d381d354df4aae6ad5c7290c838, type: 3}
+    radiusMultiplier: 1
+    duration: 4
+    tint: {r: 0.36, g: 0.95, b: 0.24, a: 0.66}
+    loop: 1
+    sortingOrder: 16
+    matchDamageRadius: 1
+    disableLensDistortion: 0
+  - displayName: "\u51B0\u51BB\u533A\u57DF"
+    effectId: ice_area
+    sprite: {fileID: 2976301488081267235, guid: 6ab818fe535fdda4e92d461c12f748a0, type: 3}
+    radiusMultiplier: 1
+    duration: 4
+    tint: {r: 0.58, g: 0.9, b: 1, a: 0.66}
+    loop: 1
+    sortingOrder: 16
+    matchDamageRadius: 1
+    disableLensDistortion: 0
+  - displayName: "\u706B\u7130\u533A\u57DF"
+    effectId: fire_area
+    sprite: {fileID: 6577901345734865938, guid: 6f61e38817f631442bd5c5201e3a6d42, type: 3}
+    radiusMultiplier: 1
+    duration: 4
+    tint: {r: 1, g: 0.34, b: 0.08, a: 0.66}
+    loop: 1
+    sortingOrder: 16
+    matchDamageRadius: 1
+    disableLensDistortion: 0
+  monsterValues:
+  - kind: 0
+    displayName: Skeleton
+    cost: 10
+    health: 36
+    damage: 6
+    moveSpeed: 1.55
+    attackRange: 0.55
+    attackCooldown: 0.65
+    poisonDamage: 0
+    color: {r: 0.82, g: 0.86, b: 0.86, a: 1}
+    tag: Cheap swarm
+  - kind: 1
+    displayName: Venom Bug
+    cost: 15
+    health: 26
+    damage: 3
+    moveSpeed: 1.95
+    attackRange: 0.45
+    attackCooldown: 0.5
+    poisonDamage: 4
+    color: {r: 0.36, g: 0.92, b: 0.32, a: 1}
+    tag: Poison
+  - kind: 2
+    displayName: Archer
+    cost: 25
+    health: 24
+    damage: 7
+    moveSpeed: 1.1
+    attackRange: 5.8
+    attackCooldown: 1.25
+    poisonDamage: 0
+    color: {r: 0.95, g: 0.74, b: 0.36, a: 1}
+    tag: Ranged
+  - kind: 3
+    displayName: Stoneguard
+    cost: 40
+    health: 115
+    damage: 8
+    moveSpeed: 0.75
+    attackRange: 0.7
+    attackCooldown: 0.9
+    poisonDamage: 0
+    color: {r: 0.42, g: 0.48, b: 0.52, a: 1}
+    tag: Tank
+  - kind: 4
+    displayName: Hex Priest
+    cost: 60
+    health: 42
+    damage: 4
+    moveSpeed: 1
+    attackRange: 4.7
+    attackCooldown: 1.4
+    poisonDamage: 0
+    color: {r: 0.62, g: 0.44, b: 0.95, a: 1}
+    tag: Anti-heal
+  - kind: 5
+    displayName: Shieldbreaker
+    cost: 70
+    health: 56
+    damage: 10
+    moveSpeed: 1.35
+    attackRange: 1.2
+    attackCooldown: 1.05
+    poisonDamage: 0
+    color: {r: 0.2, g: 0.72, b: 0.95, a: 1}
+    tag: Break shield
+  - kind: 6
+    displayName: Assassin
+    cost: 80
+    health: 34
+    damage: 22
+    moveSpeed: 2.55
+    attackRange: 0.55
+    attackCooldown: 1.25
+    poisonDamage: 0
+    color: {r: 0.18, g: 0.15, b: 0.2, a: 1}
+    tag: Burst
+  - kind: 7
+    displayName: Bone King
+    cost: 160
+    health: 420
+    damage: 20
+    moveSpeed: 0.85
+    attackRange: 1.15
+    attackCooldown: 0.75
+    poisonDamage: 0
+    color: {r: 0.9, g: 0.88, b: 0.68, a: 1}
+    tag: Boss
+  skillValues:
+  - id: 0
+    displayName: Lightning
+    type: 0
+    cost: 50
+    cooldown: 6
+    warningTime: 0.6
+    radius: 0.9
+    duration: 0
+    damage: 95
+    tickDamage: 0
+    slowMultiplier: 1
+    antiHealSeconds: 0
+    shieldBreakSeconds: 0
+    danger: 0.55
+    warningColor: {r: 1, g: 0.2, b: 0.12, a: 0.66}
+    effectColor: {r: 1, g: 0.95, b: 0.52, a: 0.72}
+    tag: Burst
+  - id: 1
+    displayName: Frost Field
+    type: 1
+    cost: 120
+    cooldown: 20
+    warningTime: 1.2
+    radius: 1.85
+    duration: 4
+    damage: 18
+    tickDamage: 4
+    slowMultiplier: 0.48
+    antiHealSeconds: 0
+    shieldBreakSeconds: 0
+    danger: 0.72
+    warningColor: {r: 0.95, g: 0.16, b: 0.14, a: 0.58}
+    effectColor: {r: 0.25, g: 0.62, b: 1, a: 0.62}
+    tag: Slow
+  - id: 2
+    displayName: Anti-Heal
+    type: 2
+    cost: 120
+    cooldown: 18
+    warningTime: 1.2
+    radius: 1.35
+    duration: 0
+    damage: 28
+    tickDamage: 0
+    slowMultiplier: 1
+    antiHealSeconds: 6
+    shieldBreakSeconds: 0
+    danger: 0.78
+    warningColor: {r: 0.95, g: 0.08, b: 0.18, a: 0.6}
+    effectColor: {r: 0.72, g: 0.28, b: 0.92, a: 0.62}
+    tag: Anti-heal
+  - id: 3
+    displayName: Shield Brand
+    type: 2
+    cost: 110
+    cooldown: 16
+    warningTime: 1
+    radius: 1.35
+    duration: 0
+    damage: 20
+    tickDamage: 0
+    slowMultiplier: 1
+    antiHealSeconds: 0
+    shieldBreakSeconds: 6
+    danger: 0.74
+    warningColor: {r: 0.95, g: 0.12, b: 0.12, a: 0.6}
+    effectColor: {r: 0.12, g: 0.82, b: 1, a: 0.62}
+    tag: Break shield
+  - id: 4
+    displayName: Bone Wall
+    type: 3
+    cost: 150
+    cooldown: 28
+    warningTime: 1
+    radius: 1.3
+    duration: 6
+    damage: 0
+    tickDamage: 0
+    slowMultiplier: 1
+    antiHealSeconds: 0
+    shieldBreakSeconds: 0
+    danger: 0.68
+    warningColor: {r: 0.92, g: 0.18, b: 0.12, a: 0.58}
+    effectColor: {r: 0.78, g: 0.76, b: 0.62, a: 1}
+    tag: Terrain
+  - id: 5
+    displayName: Demon Hand
+    type: 4
+    cost: 500
+    cooldown: 60
+    warningTime: 2.5
+    radius: 2.55
+    duration: 0
+    damage: 330
+    tickDamage: 0
+    slowMultiplier: 1
+    antiHealSeconds: 0
+    shieldBreakSeconds: 0
+    danger: 1
+    warningColor: {r: 0.32, g: 0, b: 0, a: 0.78}
+    effectColor: {r: 0.95, g: 0.1, b: 0.05, a: 0.82}
+    tag: Finisher
+  uiLayouts: []
+  uiTexts: []
+  uiButtonGroups: []

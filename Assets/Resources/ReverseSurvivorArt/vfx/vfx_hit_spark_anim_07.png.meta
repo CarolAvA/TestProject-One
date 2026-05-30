@@ -1,0 +1,442 @@
+fileFormatVersion: 2
+guid: 17f45fbe48052db40a4c6904a76013f8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1616573401789199690
+    second: vfx_hit_spark_anim_07_0
+  - first:
+      213: 1461138413538812982
+    second: vfx_hit_spark_anim_07_1
+  - first:
+      213: 1949941630791626383
+    second: vfx_hit_spark_anim_07_2
+  - first:
+      213: -2430977249189767039
+    second: vfx_hit_spark_anim_07_3
+  - first:
+      213: -1377876399555015137
+    second: vfx_hit_spark_anim_07_4
+  - first:
+      213: 3598887305215716929
+    second: vfx_hit_spark_anim_07_5
+  - first:
+      213: -504177668242812486
+    second: vfx_hit_spark_anim_07_6
+  - first:
+      213: 31240554755191016
+    second: vfx_hit_spark_anim_07_7
+  - first:
+      213: -1482085395828093869
+    second: vfx_hit_spark_anim_07_8
+  - first:
+      213: 7806216860326452452
+    second: vfx_hit_spark_anim_07_9
+  - first:
+      213: 8498089759023423939
+    second: vfx_hit_spark_anim_07_10
+  - first:
+      213: 3065583373110734840
+    second: vfx_hit_spark_anim_07_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_0
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 63
+        width: 36
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ba82095e07c099e0800000000000000
+      internalID: -1616573401789199690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_1
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 78
+        width: 25
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 634a8aa45a1074410800000000000000
+      internalID: 1461138413538812982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_2
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 73
+        width: 10
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ea41cf4959f0b10800000000000000
+      internalID: 1949941630791626383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_3
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 73
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 188dcfc521f634ed0800000000000000
+      internalID: -2430977249189767039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_4
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 78
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1e012407bcc0ece0800000000000000
+      internalID: -1377876399555015137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_5
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 62
+        width: 38
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14eab06bfe0d1f130800000000000000
+      internalID: 3598887305215716929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_6
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 50
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab1d3bcf41dc009f0800000000000000
+      internalID: -504177668242812486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_7
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 38
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e0f4c87e1dfe6000800000000000000
+      internalID: 31240554755191016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_8
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 20
+        width: 9
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35c4fd65f239e6be0800000000000000
+      internalID: -1482085395828093869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_9
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 10
+        width: 11
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ec5c6710e0455c60800000000000000
+      internalID: 7806216860326452452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_10
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 45
+        width: 32
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c1e9fb6c974fe570800000000000000
+      internalID: 8498089759023423939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vfx_hit_spark_anim_07_11
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 21
+        width: 23
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ffeb9fe5d32b8a20800000000000000
+      internalID: 3065583373110734840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      vfx_hit_spark_anim_07_0: -1616573401789199690
+      vfx_hit_spark_anim_07_1: 1461138413538812982
+      vfx_hit_spark_anim_07_10: 8498089759023423939
+      vfx_hit_spark_anim_07_11: 3065583373110734840
+      vfx_hit_spark_anim_07_2: 1949941630791626383
+      vfx_hit_spark_anim_07_3: -2430977249189767039
+      vfx_hit_spark_anim_07_4: -1377876399555015137
+      vfx_hit_spark_anim_07_5: 3598887305215716929
+      vfx_hit_spark_anim_07_6: -504177668242812486
+      vfx_hit_spark_anim_07_7: 31240554755191016
+      vfx_hit_spark_anim_07_8: -1482085395828093869
+      vfx_hit_spark_anim_07_9: 7806216860326452452
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
