@@ -20,20 +20,28 @@ prefixes = [
     ("vfx", "vfx_aoe_ice"),
     ("vfx", "vfx_aoe_poison"),
     ("vfx", "vfx_aoe_sonic"),
-    ("vfx", "vfx_skill_lightning"),
-    ("vfx", "vfx_skill_frost_field"),
-    ("vfx", "vfx_skill_anti_heal"),
-    ("vfx", "vfx_skill_shield_brand"),
-    ("vfx", "vfx_skill_bone_wall"),
-    ("vfx", "vfx_skill_demon_hand"),
+    ("vfx", "vfx_warning_lightning", 12),
+    ("vfx", "vfx_warning_frost_field", 12),
+    ("vfx", "vfx_warning_anti_heal", 12),
+    ("vfx", "vfx_warning_shield_brand", 12),
+    ("vfx", "vfx_warning_bone_wall", 12),
+    ("vfx", "vfx_warning_demon_hand", 12),
+    ("vfx", "vfx_skill_lightning", 12),
+    ("vfx", "vfx_skill_frost_field", 12),
+    ("vfx", "vfx_skill_anti_heal", 12),
+    ("vfx", "vfx_skill_shield_brand", 12),
+    ("vfx", "vfx_skill_bone_wall", 12),
+    ("vfx", "vfx_skill_demon_hand", 12),
 ]
 
 missing = []
 blank = []
 coverage = []
 
-for folder, prefix in prefixes:
-    for index in range(8):
+for item in prefixes:
+    folder, prefix = item[0], item[1]
+    frame_count = item[2] if len(item) > 2 else 8
+    for index in range(frame_count):
         path = art / folder / f"{prefix}_anim_{index:02d}.png"
         if not path.exists():
             missing.append(str(path.relative_to(art)))

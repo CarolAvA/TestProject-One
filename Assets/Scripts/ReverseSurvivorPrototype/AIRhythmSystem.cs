@@ -34,9 +34,9 @@ namespace ReverseSurvivorPrototype
         private float chooserTimer;
         private bool hasAttack;
 
-        public string AttackName => hasAttack ? currentAttack.Name : "Reading battlefield";
-        public string AttackType => hasAttack && hero != null ? $"{currentAttack.AttackType} / {hero.BuildData.BuildName}" : "Idle";
-        public string BuildTags => hero != null ? hero.BuildData.ElementTags : "Basic";
+        public string AttackName => hasAttack ? currentAttack.Name : "读取战场";
+        public string AttackType => hasAttack && hero != null ? $"{currentAttack.AttackType} / {hero.BuildData.BuildName}" : "待机";
+        public string BuildTags => hero != null ? hero.BuildData.ElementTags : "基础";
         public int DangerLevel => hasAttack ? currentAttack.DangerLevel : 0;
         public float Progress01 => hasAttack && GetScaledDuration(currentAttack) > 0f ? Mathf.Clamp01(attackTime / GetScaledDuration(currentAttack)) : 0f;
         public float AttackTime => attackTime;
@@ -44,6 +44,44 @@ namespace ReverseSurvivorPrototype
         public float EndLagRemaining => endLagTime;
         public bool IsInEndLag => endLagTime > 0f;
         public bool IsAttacking => hasAttack;
+        public int TriggeredBeatCount => hasAttack ? Mathf.Clamp(beatIndex, 0, currentAttack.Beats.Length) : 0;
+        public int TotalBeatCount => hasAttack ? currentAttack.Beats.Length : 0;
+        public string PhaseName
+        {
+            get
+            {
+                if (IsInEndLag)
+                {
+                    return "收招";
+                }
+
+                if (!hasAttack)
+                {
+                    return "准备";
+                }
+
+                if (Progress01 < 0.18f)
+                {
+                    return "预备";
+                }
+
+                return beatIndex >= currentAttack.Beats.Length ? "收束" : "弹幕";
+            }
+        }
+        public float NextBeatRemaining
+        {
+            get
+            {
+                if (!hasAttack || beatIndex >= currentAttack.Beats.Length)
+                {
+                    return 0f;
+                }
+
+                return Mathf.Max(0f, GetScaledBeatTime(currentAttack.Beats[beatIndex]) - attackTime);
+            }
+        }
+        public RhythmPitch NextBeatPitch => hasAttack && beatIndex < currentAttack.Beats.Length ? currentAttack.Beats[beatIndex].Pitch : RhythmPitch.Mid;
+        public string NextBeatPitchName => hasAttack && beatIndex < currentAttack.Beats.Length ? PitchName(currentAttack.Beats[beatIndex].Pitch) : "节奏";
 
         public void Initialize(HeroController owner)
         {
@@ -104,7 +142,7 @@ namespace ReverseSurvivorPrototype
         {
             if (!hasAttack)
             {
-                return IsInEndLag ? $"End lag window {endLagTime:0.0}s" : "AI rhythm preparing...";
+                return IsInEndLag ? $"收招窗口 {endLagTime:0.0}秒" : "角色节奏准备中...";
             }
 
             return $"{BuildTrack(RhythmPitch.Low)}\n{BuildTrack(RhythmPitch.Mid)}\n{BuildTrack(RhythmPitch.High)}";
@@ -114,23 +152,49 @@ namespace ReverseSurvivorPrototype
         {
             if (!hasAttack)
             {
-                return IsInEndLag ? "Counter window" : "Next attack soon";
+                return IsInEndLag ? "反击窗口" : "即将攻击";
             }
 
             if (beatIndex >= currentAttack.Beats.Length)
             {
-                return "No beats left";
+                return "本轮节拍结束";
             }
 
             var beat = currentAttack.Beats[beatIndex];
-            return $"{beat.Pitch} beat in {Mathf.Max(0f, GetScaledBeatTime(beat) - attackTime):0.0}s";
+            return $"{PitchName(beat.Pitch)}节拍倒计时 {Mathf.Max(0f, GetScaledBeatTime(beat) - attackTime):0.0}秒";
+        }
+
+        public void FillTimelineBeats(List<RhythmBeatUiData> target)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            target.Clear();
+            if (!hasAttack)
+            {
+                return;
+            }
+
+            var duration = Mathf.Max(0.01f, GetScaledDuration(currentAttack));
+            for (var i = 0; i < currentAttack.Beats.Length; i++)
+            {
+                var beat = currentAttack.Beats[i];
+                target.Add(new RhythmBeatUiData(
+                    Mathf.Clamp01(GetScaledBeatTime(beat) / duration),
+                    beat.Pitch,
+                    beat.Strength,
+                    i < beatIndex,
+                    i == beatIndex));
+            }
         }
 
         private string BuildTrack(RhythmPitch pitch)
         {
             const int cells = 24;
             var builder = new StringBuilder();
-            builder.Append(pitch == RhythmPitch.Low ? "Low  " : pitch == RhythmPitch.Mid ? "Mid  " : "High ");
+            builder.Append(pitch == RhythmPitch.Low ? "低音 " : pitch == RhythmPitch.Mid ? "中音 " : "高音 ");
 
             for (var i = 0; i < cells; i++)
             {
@@ -206,6 +270,7 @@ namespace ReverseSurvivorPrototype
 
             var payload = hero.BuildData.CreatePayload(beat, 0);
             MusicManiacAudioSystem.Instance.PlayProjectile(payload.Element, "fire", hero.Position, beat.Strength);
+            CreateMuzzleVfx(hero.Position, payload.Color, beat.Strength, 0.42f * payload.SizeMultiplier);
             Projectile.Create(hero.Position, target, beat.Damage, payload.Color, beat.Speed, payload);
         }
 
@@ -223,6 +288,7 @@ namespace ReverseSurvivorPrototype
                 var direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
                 var payload = hero.BuildData.CreatePayload(beat, i);
                 MusicManiacAudioSystem.Instance.PlayProjectile(payload.Element, "fire", hero.Position, Mathf.Clamp01(0.55f + beat.Strength * 0.2f));
+                CreateMuzzleVfx(hero.Position, payload.Color, beat.Strength, 0.34f * payload.SizeMultiplier);
                 Projectile.CreateDirectional(hero.Position, direction, beat.Damage, payload.Color, beat.Speed, 2.2f, payload);
             }
         }
@@ -240,16 +306,23 @@ namespace ReverseSurvivorPrototype
                     MusicManiacAudioSystem.Instance.PlayProjectile(payload.Element, "fire", hero.Position, 0.55f);
                 }
 
+                if (i % 4 == 0)
+                {
+                    CreateMuzzleVfx(hero.Position, payload.Color, beat.Strength, 0.36f * payload.SizeMultiplier);
+                }
+
                 Projectile.CreateDirectional(hero.Position, direction, beat.Damage, payload.Color, beat.Speed, 2.6f, payload);
             }
 
-            VisualFactory.CreatePulseRing(hero.Position, 1.5f + beat.Strength * 0.35f, BeatColor(beat.Pitch), 0.28f);
+            VisualFactory.CreateAnimatedSpriteBurst(hero.Position, "vfx/vfx_aoe_sonic", 2.25f + beat.Strength * 0.4f, BeatColor(beat.Pitch), 0.34f, 12, 8, 22f);
+            VisualFactory.CreatePulseRing(hero.Position, 1.7f + beat.Strength * 0.42f, BeatColor(beat.Pitch), 0.32f);
         }
 
         private void SpawnMeteorBeat(RhythmBeatEvent beat)
         {
             var center = hero.Position;
-            VisualFactory.CreatePulseRing(center, 2.2f, new Color(1f, 0.15f, 0.08f), 0.38f);
+            VisualFactory.CreateAnimatedSpriteBurst(center, "vfx/vfx_aoe_fire", 3.2f, new Color(1f, 0.28f, 0.08f), 0.46f, 12, 8, 20f);
+            VisualFactory.CreatePulseRing(center, 2.35f, new Color(1f, 0.15f, 0.08f), 0.42f);
             MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SonicRelease, center, 1f);
 
             foreach (var monster in GameDirector.Instance.Monsters)
@@ -264,7 +337,8 @@ namespace ReverseSurvivorPrototype
         private void SpawnSonicBurst(RhythmBeatEvent beat)
         {
             var radius = 1.75f * hero.BuildData.AoeRadiusMultiplier;
-            VisualFactory.CreatePulseRing(hero.Position, radius, new Color(0.9f, 0.82f, 0.45f), 0.32f);
+            VisualFactory.CreateAnimatedSpriteBurst(hero.Position, "vfx/vfx_aoe_sonic", radius * 2.25f, new Color(0.9f, 0.82f, 0.45f), 0.36f, 12, 8, 22f);
+            VisualFactory.CreatePulseRing(hero.Position, radius * 1.08f, new Color(0.9f, 0.82f, 0.45f), 0.34f);
             MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SonicRelease, hero.Position, 0.85f);
             foreach (var monster in GameDirector.Instance.Monsters)
             {
@@ -287,6 +361,12 @@ namespace ReverseSurvivorPrototype
             var scaledBeat = hero.BuildData.ScaleBeat(beat);
             SpawnTargetedBeat(scaledBeat);
             PlayBeatTone(beat);
+        }
+
+        private void CreateMuzzleVfx(Vector2 position, Color color, float strength, float radius)
+        {
+            var lifetime = Mathf.Clamp(0.13f + strength * 0.035f, 0.14f, 0.24f);
+            VisualFactory.CreatePulseRing(position, Mathf.Clamp(radius, 0.24f, 0.72f), color, lifetime);
         }
 
         private float GetScaledDuration(RhythmAttackData attack)
@@ -365,8 +445,8 @@ namespace ReverseSurvivorPrototype
         {
             attacks.Add(new RhythmAttackData(
                 RhythmAttackId.SpiritTriple,
-                "Spirit Triple",
-                "Mid line shots",
+                "灵音三连",
+                "中音直射",
                 1.2f,
                 1,
                 0.35f,
@@ -379,8 +459,8 @@ namespace ReverseSurvivorPrototype
 
             attacks.Add(new RhythmAttackData(
                 RhythmAttackId.SparkBarrage,
-                "Spark Barrage",
-                "High-frequency clear",
+                "火花连奏",
+                "高频清场",
                 2.5f,
                 2,
                 0.55f,
@@ -399,8 +479,8 @@ namespace ReverseSurvivorPrototype
 
             attacks.Add(new RhythmAttackData(
                 RhythmAttackId.MoonRing,
-                "Moon Ring",
-                "Low ring pulses",
+                "月环低音",
+                "低音环形脉冲",
                 3f,
                 3,
                 0.75f,
@@ -413,8 +493,8 @@ namespace ReverseSurvivorPrototype
 
             attacks.Add(new RhythmAttackData(
                 RhythmAttackId.ThunderNeedle,
-                "Thunder Needle",
-                "High scatter",
+                "雷针散射",
+                "高音散射",
                 3.2f,
                 2,
                 0.65f,
@@ -430,8 +510,8 @@ namespace ReverseSurvivorPrototype
 
             attacks.Add(new RhythmAttackData(
                 RhythmAttackId.FallingMeteor,
-                "Falling Meteor",
-                "Low finisher",
+                "坠落流星",
+                "低音终结",
                 5f,
                 4,
                 1f,
@@ -493,6 +573,21 @@ namespace ReverseSurvivorPrototype
                     return new Color(1f, 0.92f, 0.25f);
                 default:
                     return Color.white;
+            }
+        }
+
+        private static string PitchName(RhythmPitch pitch)
+        {
+            switch (pitch)
+            {
+                case RhythmPitch.Low:
+                    return "低音";
+                case RhythmPitch.Mid:
+                    return "中音";
+                case RhythmPitch.High:
+                    return "高音";
+                default:
+                    return "节奏";
             }
         }
     }
@@ -559,5 +654,23 @@ namespace ReverseSurvivorPrototype
         {
             return new RhythmBeatEvent(TimePoint, pitch, strength, Pattern, SpawnCount, SpreadAngle, Speed, Damage);
         }
+    }
+
+    public readonly struct RhythmBeatUiData
+    {
+        public RhythmBeatUiData(float progress, RhythmPitch pitch, float strength, bool triggered, bool next)
+        {
+            Progress = progress;
+            Pitch = pitch;
+            Strength = strength;
+            Triggered = triggered;
+            Next = next;
+        }
+
+        public float Progress { get; }
+        public RhythmPitch Pitch { get; }
+        public float Strength { get; }
+        public bool Triggered { get; }
+        public bool Next { get; }
     }
 }

@@ -86,6 +86,18 @@ namespace ReverseSurvivorPrototype
             }
         }
 
+        public void ClearRuntimeFeedback()
+        {
+            sfxCooldowns.Clear();
+            targetNumberCooldowns.Clear();
+            bubbleCooldowns.Clear();
+            recentBubbleLines.Clear();
+            globalHitStopCooldown = 0f;
+            bubbleGlobalCooldown = 0f;
+            heroMinorFeedbackCooldown = 0f;
+            activeBubbleCount = 0;
+        }
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -243,7 +255,8 @@ namespace ReverseSurvivorPrototype
         {
             CreateDamageNumber(position + new Vector2(Random.Range(-0.18f, 0.18f), 0.48f), text, GetDamageColor(type), important, false, important);
             PlayHitSfx(type, important, false);
-            MusicManiacAudioSystem.Instance.Play(text == "MISS" ? MusicManiacAudioEvent.SkillMiss : MusicManiacAudioEvent.ProjectileHit, position, important ? 0.9f : 0.55f);
+            var isMiss = text == "MISS" || text == "未命中" || text == "闪避";
+            MusicManiacAudioSystem.Instance.Play(isMiss ? MusicManiacAudioEvent.SkillMiss : MusicManiacAudioEvent.ProjectileHit, position, important ? 0.9f : 0.55f);
             if (important)
             {
                 FeelImpactSystem.Instance.Play(FeelImpactEvent.CriticalHit, FeelImpactLevel.Light, position, GetDamageColor(type));
@@ -506,12 +519,12 @@ namespace ReverseSurvivorPrototype
         {
             if (isKill)
             {
-                return $"KILL {amount:0}";
+                return $"击破 {amount:0}";
             }
 
             if (isCritical)
             {
-                return $"CRIT {amount:0}";
+                return $"暴击 {amount:0}";
             }
 
             if (isDot)
@@ -526,12 +539,12 @@ namespace ReverseSurvivorPrototype
         {
             if (isShieldBreak)
             {
-                return $"BREAK {amount:0}";
+                return $"破盾 {amount:0}";
             }
 
             if (isHeavy)
             {
-                return $"HIT {amount:0}";
+                return $"重击 {amount:0}";
             }
 
             return $"{ElementShort(type)} {amount:0}";
@@ -541,13 +554,14 @@ namespace ReverseSurvivorPrototype
         {
             switch (type)
             {
-                case DamageFeedbackType.Fire: return "FIRE";
-                case DamageFeedbackType.Ice: return "ICE";
-                case DamageFeedbackType.Lightning: return "ZAP";
-                case DamageFeedbackType.Poison: return "TOX";
-                case DamageFeedbackType.Sonic: return "WAVE";
-                case DamageFeedbackType.ShieldBreak: return "SHIELD";
-                default: return "DMG";
+                case DamageFeedbackType.Fire: return "火";
+                case DamageFeedbackType.Ice: return "冰";
+                case DamageFeedbackType.Lightning: return "雷";
+                case DamageFeedbackType.Poison: return "毒";
+                case DamageFeedbackType.Sonic: return "音波";
+                case DamageFeedbackType.ShieldBreak: return "破盾";
+                case DamageFeedbackType.Shadow: return "暗影";
+                default: return "伤害";
             }
         }
 

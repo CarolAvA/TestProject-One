@@ -10,6 +10,8 @@ VFX = ART / "vfx"
 TILES = ART / "tiles"
 SIZE = 128
 SMALL = 96
+SKILL_SIZE = 192
+SKILL_FRAMES = 12
 
 
 COLORS = {
@@ -36,20 +38,56 @@ def c(name, alpha=None):
     return (r, g, b, a if alpha is None else alpha)
 
 
+def ca(color, alpha=None):
+    if isinstance(color, str):
+        return c(color, alpha)
+
+    if alpha is None:
+        return color
+
+    return (color[0], color[1], color[2], alpha)
+
+
 def line(draw, xy, color, width=1):
-    draw.line(xy, fill=c(color), width=width)
+    draw.line(xy, fill=ca(color), width=width)
 
 
 def ellipse(draw, xy, fill, outline=None, width=1):
-    draw.ellipse(xy, fill=c(fill) if isinstance(fill, str) else fill, outline=c(outline) if outline else None, width=width)
+    draw.ellipse(xy, fill=ca(fill), outline=ca(outline) if outline else None, width=width)
 
 
 def poly(draw, points, fill, outline=None):
-    draw.polygon(points, fill=c(fill), outline=c(outline) if outline else None)
+    draw.polygon(points, fill=ca(fill), outline=ca(outline) if outline else None)
 
 
 def rect(draw, xy, fill, outline=None):
-    draw.rectangle(xy, fill=c(fill), outline=c(outline) if outline else None)
+    draw.rectangle(xy, fill=ca(fill), outline=ca(outline) if outline else None)
+
+
+def regular_polygon(cx, cy, radius, sides, rotation=0):
+    return [
+        (
+            cx + math.cos(rotation + i / sides * math.tau) * radius,
+            cy + math.sin(rotation + i / sides * math.tau) * radius,
+        )
+        for i in range(sides)
+    ]
+
+
+def arc_ring(draw, cx, cy, radius, color, alpha, width, start_offset=0, segments=10, gap=10):
+    for i in range(segments):
+        start = start_offset + i * 360 / segments
+        end = start + 360 / segments - gap
+        draw.arc((cx - radius, cy - radius, cx + radius, cy + radius), start=start, end=end, fill=ca(color, alpha), width=width)
+
+
+def add_radial_glow(img, color, strength=80, radius=38):
+    size = img.width
+    layer = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+    cx = cy = size // 2
+    draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), fill=ca(color, strength))
+    img.alpha_composite(layer.filter(ImageFilter.GaussianBlur(max(2, int(radius * 0.32)))))
 
 
 def glow_layer(size, color, radius=4):
@@ -170,7 +208,7 @@ def draw_aoe(frame, frames, color, motif="ring", size=SIZE):
     return img
 
 
-def draw_skill(frame, frames, key):
+def draw_skill_warning(frame, frames, key, size=SKILL_SIZE):
     palette = {
         "lightning": ("yellow", "blue"),
         "frost_field": ("ice", "cyan"),
@@ -180,35 +218,137 @@ def draw_skill(frame, frames, key):
         "demon_hand": ("red", "purple"),
     }
     primary, secondary = palette[key]
-    img = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    add_radial_glow(img, secondary, 52, int(size * 0.32))
     draw = ImageDraw.Draw(img)
-    cx, cy = SIZE // 2, SIZE // 2
+    cx, cy = size // 2, size // 2
     progress = frame / max(1, frames - 1)
-    r = 12 + progress * 47
-    draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=c(primary, int(230 * (1 - progress * 0.45))), width=4)
+    beat = 0.5 + 0.5 * math.sin(progress * math.tau)
+    radius = size * (0.34 + beat * 0.035)
+
+    draw.ellipse((cx - radius, cy - radius, cx + radius, cy + radius), fill=ca(primary, 24), outline=ca(primary, 180), width=3)
+    arc_ring(draw, cx, cy, radius + 8, secondary, 210, 4, progress * 110, 12, 12)
+    arc_ring(draw, cx, cy, radius - 14, primary, 140, 2, -progress * 160, 16, 14)
+    draw.ellipse((cx - 6, cy - 6, cx + 6, cy + 6), fill=ca("white", 210), outline=ca(primary, 230), width=2)
+
+    for i in range(24):
+        a = i / 24 * math.tau + progress * 0.5
+        inner = radius - 5 + math.sin(i + progress * math.tau) * 2
+        outer = radius + 4 + (5 if i % 4 == 0 else 0)
+        line(draw, (cx + math.cos(a) * inner, cy + math.sin(a) * inner, cx + math.cos(a) * outer, cy + math.sin(a) * outer), secondary if i % 2 else primary, 2 if i % 4 == 0 else 1)
+
     if key == "lightning":
-        for i in range(5):
-            x = cx - 26 + i * 13
-            poly(draw, [(x, cy - 45), (x + 9, cy - 5), (x + 1, cy - 8), (x + 16, cy + 38)], primary, "white")
+        for i in range(6):
+            a = i / 6 * math.tau + progress * 0.85
+            start = radius * 0.34
+            mid = radius * 0.58
+            end = radius * 0.86
+            pts = [
+                (cx + math.cos(a) * start, cy + math.sin(a) * start),
+                (cx + math.cos(a + 0.2) * mid, cy + math.sin(a + 0.2) * mid),
+                (cx + math.cos(a - 0.08) * end, cy + math.sin(a - 0.08) * end),
+            ]
+            draw.line(pts, fill=ca("white", 230), width=4, joint="curve")
+            draw.line(pts, fill=ca(primary, 240), width=2, joint="curve")
     elif key == "frost_field":
         for i in range(8):
-            a = i / 8 * math.tau
-            line(draw, (cx, cy, cx + math.cos(a) * (28 + progress * 20), cy + math.sin(a) * (28 + progress * 20)), secondary, 2)
+            a = i / 8 * math.tau + progress * 0.22
+            line(draw, (cx + math.cos(a) * 18, cy + math.sin(a) * 18, cx + math.cos(a) * (radius - 8), cy + math.sin(a) * (radius - 8)), "white", 2)
+            tip = (cx + math.cos(a) * (radius - 16), cy + math.sin(a) * (radius - 16))
+            for off in (-0.35, 0.35):
+                line(draw, (tip[0], tip[1], tip[0] - math.cos(a + off) * 13, tip[1] - math.sin(a + off) * 13), secondary, 2)
     elif key == "anti_heal":
-        line(draw, (cx - 30, cy - 30, cx + 30, cy + 30), primary, 6)
-        line(draw, (cx + 30, cy - 30, cx - 30, cy + 30), primary, 6)
-        draw.ellipse((cx - 25, cy - 25, cx + 25, cy + 25), outline=c(secondary), width=4)
-    elif key == "shield_brand":
-        poly(draw, [(cx, cy - 38), (cx + 34, cy - 20), (cx + 24, cy + 28), (cx, cy + 42), (cx - 24, cy + 28), (cx - 34, cy - 20)], secondary, "white")
-        line(draw, (cx - 28, cy, cx + 28, cy), primary, 5)
-    elif key == "bone_wall":
+        cross = radius * 0.46
+        line(draw, (cx - cross, cy - cross, cx + cross, cy + cross), secondary, 7)
+        line(draw, (cx + cross, cy - cross, cx - cross, cy + cross), secondary, 7)
+        draw.ellipse((cx - cross * 0.72, cy - cross * 0.72, cx + cross * 0.72, cy + cross * 0.72), outline=ca("white", 180), width=3)
         for i in range(5):
-            rect(draw, (cx - 42 + i * 18, cy - 38, cx - 30 + i * 18, cy + 38), primary, "dark")
+            a = i / 5 * math.tau - progress
+            ellipse(draw, (cx + math.cos(a) * 45 - 4, cy + math.sin(a) * 45 - 4, cx + math.cos(a) * 45 + 4, cy + math.sin(a) * 45 + 4), "magenta", None)
+    elif key == "shield_brand":
+        poly(draw, regular_polygon(cx, cy, radius * 0.58, 6, math.pi / 6), ca(secondary, 54), "white")
+        poly(draw, [(cx, cy - radius * 0.42), (cx + radius * 0.34, cy - radius * 0.22), (cx + radius * 0.22, cy + radius * 0.32), (cx, cy + radius * 0.48), (cx - radius * 0.22, cy + radius * 0.32), (cx - radius * 0.34, cy - radius * 0.22)], ca(primary, 120), "white")
+        line(draw, (cx - radius * 0.34, cy, cx + radius * 0.34, cy), primary, 5)
+    elif key == "bone_wall":
+        for i in range(9):
+            x = cx - 56 + i * 14
+            h = 34 + (i % 3) * 7 + beat * 9
+            poly(draw, [(x, cy + h), (x + 6, cy - h), (x + 12, cy + h)], ca(primary, 190), "dark")
+        line(draw, (cx - 64, cy + 31, cx + 64, cy + 31), primary, 4)
+    elif key == "demon_hand":
+        claw_base = radius * 0.42
+        for i in range(5):
+            a = -0.9 + i * 0.45 + math.sin(progress * math.tau) * 0.08
+            line(draw, (cx, cy + claw_base, cx + math.sin(a) * radius * 0.66, cy - radius * 0.42 - abs(i - 2) * 5), primary, 9)
+        ellipse(draw, (cx - 24, cy + 14, cx + 24, cy + 54), secondary, "dark")
+        draw.ellipse((cx - radius * 0.78, cy - radius * 0.78, cx + radius * 0.78, cy + radius * 0.78), outline=ca("red", 94), width=7)
+    return img.filter(ImageFilter.GaussianBlur(0.15))
+
+
+def draw_skill(frame, frames, key, size=SKILL_SIZE):
+    palette = {
+        "lightning": ("yellow", "blue"),
+        "frost_field": ("ice", "cyan"),
+        "anti_heal": ("purple", "magenta"),
+        "shield_brand": ("cyan", "blue"),
+        "bone_wall": ("bone", "yellow"),
+        "demon_hand": ("red", "purple"),
+    }
+    primary, secondary = palette[key]
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    add_radial_glow(img, primary, 80, int(size * 0.28))
+    draw = ImageDraw.Draw(img)
+    cx, cy = size // 2, size // 2
+    progress = frame / max(1, frames - 1)
+    burst = math.sin(progress * math.pi)
+    r = size * (0.16 + progress * 0.34)
+
+    draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill=ca(primary, int(40 + burst * 42)), outline=ca("white", int(210 * (1 - progress * 0.55))), width=4)
+    arc_ring(draw, cx, cy, r + 12, secondary, int(230 * max(0.2, 1 - progress * 0.55)), 5, progress * 180, 10, 8)
+
+    for i in range(18):
+        a = i / 18 * math.tau + progress * 1.4
+        inner = r * 0.34
+        outer = r + 18 + math.sin(i * 1.7 + progress * math.tau) * 8
+        line(draw, (cx + math.cos(a) * inner, cy + math.sin(a) * inner, cx + math.cos(a) * outer, cy + math.sin(a) * outer), primary if i % 2 else secondary, 3 if i % 3 == 0 else 2)
+
+    if key == "lightning":
+        for i in range(7):
+            x = cx - 54 + i * 18 + math.sin(progress * math.tau + i) * 4
+            pts = [(x, cy - 70), (x + 13, cy - 8), (x + 2, cy - 11), (x + 24, cy + 66)]
+            poly(draw, pts, "yellow", "white")
+            line(draw, (x - 9, cy + 42, x + 33, cy - 40), "cyan", 2)
+    elif key == "frost_field":
+        for i in range(10):
+            a = i / 10 * math.tau + progress * 0.16
+            line(draw, (cx, cy, cx + math.cos(a) * (40 + burst * 42), cy + math.sin(a) * (40 + burst * 42)), "white", 3)
+            line(draw, (cx + math.cos(a + 0.16) * 24, cy + math.sin(a + 0.16) * 24, cx + math.cos(a) * 70, cy + math.sin(a) * 70), secondary, 2)
+    elif key == "anti_heal":
+        cross = 48 + burst * 22
+        line(draw, (cx - cross, cy - cross, cx + cross, cy + cross), "magenta", 10)
+        line(draw, (cx + cross, cy - cross, cx - cross, cy + cross), "magenta", 10)
+        draw.ellipse((cx - cross * 0.72, cy - cross * 0.72, cx + cross * 0.72, cy + cross * 0.72), outline=ca("white", 190), width=4)
+        for i in range(8):
+            a = i / 8 * math.tau + progress * 2.3
+            ellipse(draw, (cx + math.cos(a) * 58 - 7, cy + math.sin(a) * 58 - 7, cx + math.cos(a) * 58 + 7, cy + math.sin(a) * 58 + 7), "purple", None)
+    elif key == "shield_brand":
+        poly(draw, regular_polygon(cx, cy, 62 + burst * 18, 6, math.pi / 6 + progress * 0.1), ca(secondary, 145), "white")
+        line(draw, (cx - 64, cy, cx + 64, cy), primary, 8)
+        line(draw, (cx, cy - 56, cx, cy + 56), "white", 3)
+    elif key == "bone_wall":
+        for i in range(11):
+            x = cx - 72 + i * 14
+            h = 44 + (i % 4) * 8 + burst * 24
+            poly(draw, [(x, cy + h), (x + 7, cy - h), (x + 14, cy + h)], primary, "dark")
+        draw.rectangle((cx - 78, cy + 44, cx + 78, cy + 59), fill=ca("bone", 180), outline=ca("dark"))
     elif key == "demon_hand":
         for i in range(5):
-            a = -0.85 + i * 0.42
-            line(draw, (cx, cy + 36, cx + math.sin(a) * 42, cy - 30 - abs(i - 2) * 5), primary, 8)
-        ellipse(draw, (cx - 22, cy + 10, cx + 22, cy + 48), secondary, "dark")
+            a = -0.95 + i * 0.48
+            line(draw, (cx, cy + 66, cx + math.sin(a) * (58 + burst * 24), cy - 52 - abs(i - 2) * 8), "red", 13)
+            line(draw, (cx, cy + 66, cx + math.sin(a) * (58 + burst * 24), cy - 52 - abs(i - 2) * 8), "purple", 5)
+        ellipse(draw, (cx - 34, cy + 18, cx + 34, cy + 78), "purple", "dark")
+        draw.ellipse((cx - 78, cy - 78, cx + 78, cy + 78), outline=ca("red", int(180 * (1 - progress * 0.25))), width=8)
+
     return img
 
 
@@ -277,9 +417,12 @@ def main():
 
     skill_specs = ["lightning", "frost_field", "anti_heal", "shield_brand", "bone_wall", "demon_hand"]
     for key in skill_specs:
+        warning_prefix = f"vfx_warning_{key}"
+        save_sequence(VFX, warning_prefix, SKILL_FRAMES, lambda i, n, k=key: draw_skill_warning(i, n, k))
+        entries.append((VFX, warning_prefix, SKILL_FRAMES))
         prefix = f"vfx_skill_{key}"
-        save_sequence(VFX, prefix, 8, lambda i, n, k=key: draw_skill(i, n, k))
-        entries.append((VFX, prefix, 8))
+        save_sequence(VFX, prefix, SKILL_FRAMES, lambda i, n, k=key: draw_skill(i, n, k))
+        entries.append((VFX, prefix, SKILL_FRAMES))
 
     # Keep tile fallbacks visually upgraded too.
     draw_aoe(0, 8, "fire", "fire").save(TILES / "tile_fire.png")

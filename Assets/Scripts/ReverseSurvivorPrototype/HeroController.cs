@@ -11,6 +11,7 @@ namespace ReverseSurvivorPrototype
         private readonly AIHeroBuildData buildData = new AIHeroBuildData();
 
         private float maxHealth;
+        private float maxHealthMultiplier = 1f;
         private float health;
         private float shield;
         private float experience;
@@ -86,9 +87,22 @@ namespace ReverseSurvivorPrototype
             ApplyBuildCard(build);
         }
 
+        public void SetMaxHealthMultiplier(float multiplier)
+        {
+            var health01 = maxHealth > 0f ? Mathf.Clamp01(health / maxHealth) : 1f;
+            maxHealthMultiplier = Mathf.Max(0.1f, multiplier);
+            maxHealth = MaxHealthBase * maxHealthMultiplier;
+            health = maxHealth * health01;
+        }
+
         private void Update()
         {
             var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return;
+            }
+
             TickStatusEffects();
             if (hitStunTimer > 0f)
             {
@@ -117,6 +131,12 @@ namespace ReverseSurvivorPrototype
 
         public void TakeDamage(float amount, MonsterKind sourceKind, bool antiHeal = false, bool shieldbreaker = false)
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return;
+            }
+
             if (antiHeal)
             {
                 antiHealTimer = Mathf.Max(antiHealTimer, 4f);
@@ -125,7 +145,7 @@ namespace ReverseSurvivorPrototype
             if (sourceKind == MonsterKind.VenomBug)
             {
                 poisonTimer = Mathf.Max(poisonTimer, 4f);
-                var config = GameDirector.Instance.GetMonsterConfig(sourceKind);
+                var config = director.GetMonsterConfig(sourceKind);
                 poisonDamagePerSecond = Mathf.Max(poisonDamagePerSecond, config.PoisonDamage);
             }
 
@@ -149,7 +169,7 @@ namespace ReverseSurvivorPrototype
             if (adjusted > 0f)
             {
                 health = Mathf.Max(0f, health - adjusted);
-                GameDirector.Instance.AwardDamage(adjusted);
+                director.AwardDamage(adjusted);
             }
 
             var feedbackType = shieldbreaker
@@ -159,11 +179,20 @@ namespace ReverseSurvivorPrototype
                     : sourceKind == MonsterKind.HexPriest
                         ? DamageFeedbackType.Shadow
                         : DamageFeedbackType.Physical;
-            DamageFeedbackSystem.Instance.ReportHeroDamage(this, Mathf.Max(0f, amount), feedbackType, Position + Random.insideUnitCircle.normalized, false, sourceKind == MonsterKind.VenomBug, shieldbreaker, Health01 < 0.35f, sourceKind == MonsterKind.BoneKing || sourceKind == MonsterKind.Assassin);
+            if (DamageFeedbackSystem.Instance != null)
+            {
+                DamageFeedbackSystem.Instance.ReportHeroDamage(this, Mathf.Max(0f, amount), feedbackType, Position + Random.insideUnitCircle.normalized, false, sourceKind == MonsterKind.VenomBug, shieldbreaker, Health01 < 0.35f, sourceKind == MonsterKind.BoneKing || sourceKind == MonsterKind.Assassin);
+            }
         }
 
         public void TakeSkillDamage(float amount, bool antiHeal, bool shieldbreaker)
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return;
+            }
+
             if (antiHeal)
             {
                 ApplyAntiHeal(4f);
@@ -195,7 +224,7 @@ namespace ReverseSurvivorPrototype
             if (adjusted > 0f)
             {
                 health = Mathf.Max(0f, health - adjusted);
-                GameDirector.Instance.AwardDamage(adjusted);
+                director.AwardDamage(adjusted);
             }
         }
 
@@ -248,8 +277,16 @@ namespace ReverseSurvivorPrototype
         private void TakeRawDamage(float amount, DamageFeedbackType type)
         {
             health = Mathf.Max(0f, health - amount);
-            GameDirector.Instance.AwardDamage(amount);
-            DamageFeedbackSystem.Instance.ReportHeroDamage(this, amount, type, Position, false, false, false, Health01 < 0.35f, false);
+            var director = GameDirector.Instance;
+            if (director != null && !director.IsRestarting)
+            {
+                director.AwardDamage(amount);
+            }
+
+            if (DamageFeedbackSystem.Instance != null)
+            {
+                DamageFeedbackSystem.Instance.ReportHeroDamage(this, amount, type, Position, false, false, false, Health01 < 0.35f, false);
+            }
         }
 
         private void ChooseMovement(GameDirector director)
@@ -388,17 +425,26 @@ namespace ReverseSurvivorPrototype
                 experience -= nextLevelExperience;
                 nextLevelExperience += 24f + Level * 8f;
                 Level += 1;
-                maxHealth += 38f;
-                health = Mathf.Min(maxHealth, health + 90f);
+                maxHealth += 38f * maxHealthMultiplier;
+                health = Mathf.Min(maxHealth, health + 90f * maxHealthMultiplier);
 
                 var chosen = nextBuild;
                 build = chosen;
                 nextBuild = (HeroBuild)(((int)nextBuild + 1) % 3);
                 ApplyBuildCard(chosen);
-                buildData.LearnNextCard(Level, GameDirector.Instance.Monsters.Count, build);
-                cards.Add($"BD: {buildData.Cards[buildData.Cards.Count - 1]}");
-                DamageFeedbackSystem.Instance.ReportHeroBubble(this, BubbleTalkEvent.LevelUp, true);
-                FeelImpactSystem.Instance.Play(FeelImpactEvent.LevelUp, FeelImpactLevel.Medium, Position, new Color(1f, 0.78f, 0.26f));
+                var director = GameDirector.Instance;
+                var monsterCount = director != null && !director.IsRestarting ? director.Monsters.Count : 0;
+                buildData.LearnNextCard(Level, monsterCount, build);
+                cards.Add($"构筑：{buildData.Cards[buildData.Cards.Count - 1]}");
+                if (DamageFeedbackSystem.Instance != null)
+                {
+                    DamageFeedbackSystem.Instance.ReportHeroBubble(this, BubbleTalkEvent.LevelUp, true);
+                }
+
+                if (FeelImpactSystem.Instance != null)
+                {
+                    FeelImpactSystem.Instance.Play(FeelImpactEvent.LevelUp, FeelImpactLevel.Medium, Position, new Color(1f, 0.78f, 0.26f));
+                }
             }
         }
 
@@ -408,13 +454,13 @@ namespace ReverseSurvivorPrototype
             switch (chosen)
             {
                 case HeroBuild.FlameAura:
-                    cards.Add("Flame Aura");
+                    cards.Add("火焰光环");
                     break;
                 case HeroBuild.Lifesteal:
-                    cards.Add("Lifesteal");
+                    cards.Add("吸血节奏");
                     break;
                 case HeroBuild.ShieldWall:
-                    cards.Add("Shield Wall");
+                    cards.Add("护盾壁垒");
                     shield += 95f + Level * 12f;
                     break;
             }
@@ -453,7 +499,10 @@ namespace ReverseSurvivorPrototype
             }
 
             health = Mathf.Min(maxHealth, health + amount);
-            DamageFeedbackSystem.Instance.ReportHeroHeal(this, amount);
+            if (DamageFeedbackSystem.Instance != null)
+            {
+                DamageFeedbackSystem.Instance.ReportHeroHeal(this, amount);
+            }
         }
 
         public void ApplyHitReaction(Color flashColor, Vector2 sourcePosition, float knockbackDistance, float hitStopSeconds, float flashSeconds)

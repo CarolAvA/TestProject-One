@@ -7,6 +7,7 @@ namespace ReverseSurvivorPrototype
         private TrailModule trail;
         private float radius;
         private float remaining;
+        private float maxDuration;
         private float tickTimer;
         private MeshRenderer meshRenderer;
         private SpriteRenderer spriteRenderer;
@@ -33,7 +34,8 @@ namespace ReverseSurvivorPrototype
         {
             trail = trailModule;
             radius = effectRadius;
-            remaining = duration;
+            remaining = Mathf.Max(0.1f, duration);
+            maxDuration = remaining;
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material = VisualFactory.CreateMaterial(ColorForTrail(trail));
             meshRenderer.enabled = false;
@@ -52,6 +54,13 @@ namespace ReverseSurvivorPrototype
 
         private void Update()
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             remaining -= Time.deltaTime;
             tickTimer -= Time.deltaTime;
 
@@ -64,16 +73,18 @@ namespace ReverseSurvivorPrototype
             if (meshRenderer != null)
             {
                 var color = ColorForTrail(trail);
-                color.a = Mathf.Clamp01(remaining * 0.45f);
+                color.a = Mathf.Clamp01(remaining / Mathf.Max(0.01f, maxDuration)) * 0.42f;
                 meshRenderer.material.color = color;
             }
 
             if (spriteRenderer != null)
             {
                 var color = ColorForTrail(trail);
-                color.a = Mathf.Clamp01(remaining * 0.5f);
+                var life01 = Mathf.Clamp01(remaining / Mathf.Max(0.01f, maxDuration));
+                var fade = Mathf.SmoothStep(0f, 1f, Mathf.Min(life01 * 2.2f, 1f));
+                color.a = fade * 0.82f;
                 spriteRenderer.color = color;
-                spriteRenderer.transform.Rotate(0f, 0f, Time.deltaTime * 28f);
+                spriteRenderer.transform.Rotate(0f, 0f, Time.deltaTime * 42f);
             }
 
             if (remaining <= 0f)
@@ -84,7 +95,13 @@ namespace ReverseSurvivorPrototype
 
         private void TickMonsters()
         {
-            foreach (var monster in GameDirector.Instance.Monsters)
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return;
+            }
+
+            foreach (var monster in director.Monsters)
             {
                 if (monster == null || Vector2.Distance(monster.Position, transform.position) > radius)
                 {

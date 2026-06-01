@@ -4,7 +4,7 @@ namespace ReverseSurvivorPrototype
 {
     public sealed class Projectile : MonoBehaviour
     {
-        private const float ProjectileVisualScale = 1.45f;
+        private const float ProjectileVisualScale = 1.95f;
 
         private MonsterUnit target;
         private Vector2 direction;
@@ -26,7 +26,7 @@ namespace ReverseSurvivorPrototype
             projectileObject.transform.localScale = Vector3.one * 0.16f;
             Destroy(projectileObject.GetComponent<SphereCollider>());
             projectileObject.GetComponent<MeshRenderer>().enabled = false;
-            MusicManiacArtLibrary.AttachSprite(projectileObject, MusicManiacArtLibrary.ProjectileSprite(ElementModule.None), 0.38f * ProjectileVisualScale, 13, "Projectile Pixel Art", color);
+            MusicManiacArtLibrary.AttachSprite(projectileObject, MusicManiacArtLibrary.ProjectileSprite(ElementModule.None), 0.4f * ProjectileVisualScale, 13, "Projectile Pixel Art", color);
 
             var projectile = projectileObject.AddComponent<Projectile>();
             projectile.target = target;
@@ -44,7 +44,7 @@ namespace ReverseSurvivorPrototype
             projectileObject.transform.localScale = Vector3.one * 0.16f * payload.SizeMultiplier;
             Destroy(projectileObject.GetComponent<SphereCollider>());
             projectileObject.GetComponent<MeshRenderer>().enabled = false;
-            MusicManiacArtLibrary.AttachSprite(projectileObject, MusicManiacArtLibrary.ProjectileSprite(payload.Element), 0.42f * payload.SizeMultiplier * ProjectileVisualScale, 13, "Projectile Pixel Art", Color.white);
+            MusicManiacArtLibrary.AttachSprite(projectileObject, MusicManiacArtLibrary.ProjectileSprite(payload.Element), 0.44f * payload.SizeMultiplier * ProjectileVisualScale, 13, "Projectile Pixel Art", Color.white);
 
             var projectile = projectileObject.AddComponent<Projectile>();
             projectile.target = target;
@@ -78,7 +78,7 @@ namespace ReverseSurvivorPrototype
             MusicManiacArtLibrary.AttachSprite(
                 projectileObject,
                 hasPayload ? MusicManiacArtLibrary.ProjectileSprite(payload.Element) : MusicManiacArtLibrary.ProjectileSprite(ElementModule.None),
-                0.34f * (hasPayload ? payload.SizeMultiplier : 1f) * ProjectileVisualScale,
+                0.38f * (hasPayload ? payload.SizeMultiplier : 1f) * ProjectileVisualScale,
                 13,
                 "Projectile Pixel Art",
                 Color.white);
@@ -99,6 +99,13 @@ namespace ReverseSurvivorPrototype
 
         private void Update()
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             lifetime -= Time.deltaTime;
             if (directional)
             {
@@ -121,7 +128,7 @@ namespace ReverseSurvivorPrototype
             }
 
             var toTarget = target.Position - (Vector2)transform.position;
-            if (toTarget.magnitude < 0.18f)
+            if (toTarget.magnitude < 0.24f)
             {
                 HitMonster(target);
                 return;
@@ -134,14 +141,21 @@ namespace ReverseSurvivorPrototype
 
         private void CheckDirectionalHit()
         {
-            foreach (var monster in GameDirector.Instance.Monsters)
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            foreach (var monster in director.Monsters)
             {
                 if (monster == null)
                 {
                     continue;
                 }
 
-                if (Vector2.Distance(transform.position, monster.Position) < 0.28f)
+                if (Vector2.Distance(transform.position, monster.Position) < 0.34f)
                 {
                     HitMonster(monster);
                     return;
@@ -159,7 +173,11 @@ namespace ReverseSurvivorPrototype
 
             var feedbackType = hasPayload ? FeedbackTypeForElement(payload.Element) : DamageFeedbackType.Physical;
             var isCritical = hasPayload && (payload.Element == ElementModule.Lightning || damage >= 26f);
-            MusicManiacAudioSystem.Instance.PlayProjectile(hasPayload ? payload.Element : ElementModule.None, "hit", transform.position, isCritical ? 1f : 0.72f);
+            if (MusicManiacAudioSystem.Instance != null)
+            {
+                MusicManiacAudioSystem.Instance.PlayProjectile(hasPayload ? payload.Element : ElementModule.None, "hit", transform.position, isCritical ? 1f : 0.72f);
+            }
+
             monster.TakeDamage(damage, feedbackType, transform.position, false, false, isCritical);
 
             if (hasPayload)
@@ -167,12 +185,18 @@ namespace ReverseSurvivorPrototype
                 ApplyPayload(monster);
             }
 
-            VisualFactory.CreateSpriteBurst(
+            var hitColor = hasPayload ? payload.Color : Color.white;
+            var hitRadius = hasPayload ? 0.86f * payload.SizeMultiplier : 0.62f;
+            VisualFactory.CreatePulseRing(transform.position, hitRadius * 0.48f, hitColor, 0.2f);
+            VisualFactory.CreateAnimatedSpriteBurst(
                 transform.position,
-                MusicManiacArtLibrary.Vfx("vfx_hit_spark"),
-                hasPayload ? 0.62f * payload.SizeMultiplier : 0.45f,
-                hasPayload ? payload.Color : Color.white,
-                0.2f);
+                "vfx/vfx_hit_spark",
+                hitRadius,
+                hitColor,
+                0.28f,
+                18,
+                8,
+                24f);
 
             if (pierceRemaining > 0)
             {
@@ -215,6 +239,13 @@ namespace ReverseSurvivorPrototype
 
         private void ChainLightning(Vector2 origin, int bounces, float bounceDamage)
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             var current = origin;
             for (var i = 0; i < bounces; i++)
             {
@@ -225,7 +256,11 @@ namespace ReverseSurvivorPrototype
                 }
 
                 VisualFactory.CreateFlash(current, next.Position, AIHeroBuildData.ElementColor(ElementModule.Lightning));
-                MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.LightningBounce, current, 0.75f);
+                if (MusicManiacAudioSystem.Instance != null)
+                {
+                    MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.LightningBounce, current, 0.75f);
+                }
+
                 next.TakeDamage(bounceDamage, DamageFeedbackType.Lightning, current, false, false, false);
                 current = next.Position;
             }
@@ -233,9 +268,15 @@ namespace ReverseSurvivorPrototype
 
         private MonsterUnit FindNearestMonster(Vector2 origin, float radius)
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return null;
+            }
+
             MonsterUnit best = null;
             var bestDistance = radius;
-            foreach (var monster in GameDirector.Instance.Monsters)
+            foreach (var monster in director.Monsters)
             {
                 if (monster == null)
                 {
@@ -255,11 +296,23 @@ namespace ReverseSurvivorPrototype
 
         private void ExplodeFire(Vector2 position)
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             var radius = Mathf.Max(0.55f, payload.FireRadius);
-            VisualFactory.CreateAnimatedSpriteBurst(position, "vfx/vfx_aoe_fire", radius * 2.1f, AIHeroBuildData.ElementColor(ElementModule.Fire), 0.32f, -4, 8, 18f);
-            VisualFactory.CreatePulseRing(position, radius, AIHeroBuildData.ElementColor(ElementModule.Fire), 0.24f);
-            MusicManiacAudioSystem.Instance.PlayProjectile(ElementModule.Fire, "hit", position, 1f);
-            foreach (var monster in GameDirector.Instance.Monsters)
+            VisualFactory.CreateAnimatedSpriteBurst(position, "vfx/vfx_aoe_fire", radius * 2.65f, AIHeroBuildData.ElementColor(ElementModule.Fire), 0.42f, -4, 8, 20f);
+            VisualFactory.CreatePulseRing(position, radius * 1.12f, AIHeroBuildData.ElementColor(ElementModule.Fire), 0.28f);
+            VisualFactory.CreatePulseRing(position, radius * 0.72f, new Color(1f, 0.82f, 0.34f), 0.22f);
+            if (MusicManiacAudioSystem.Instance != null)
+            {
+                MusicManiacAudioSystem.Instance.PlayProjectile(ElementModule.Fire, "hit", position, 1f);
+            }
+
+            foreach (var monster in director.Monsters)
             {
                 if (monster != null && Vector2.Distance(monster.Position, position) <= radius)
                 {
@@ -281,8 +334,8 @@ namespace ReverseSurvivorPrototype
                 return;
             }
 
-            trailTimer = 0.16f;
-            RhythmAreaEffect.Create(transform.position, payload.Trail, 0.42f * payload.SizeMultiplier, payload.TrailDuration);
+            trailTimer = 0.105f;
+            RhythmAreaEffect.Create(transform.position, payload.Trail, 0.56f * payload.SizeMultiplier, payload.TrailDuration);
         }
 
         private static DamageFeedbackType FeedbackTypeForElement(ElementModule element)

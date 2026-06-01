@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MusicManiacConfigDatabase
   m_EditorClassIdentifier: 
   characterAnimations:
-  - displayName: "AI\u89D2\u8272"
+  - displayName: "\u97F3\u4E50\u75AF\u5B50"
     assetId: characters/hero_music_maniac
     monsterKind: 0
     isHero: 1
@@ -1076,7 +1076,7 @@ MonoBehaviour:
     showKillPrefix: 1
     hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
     hitSfx: {fileID: 0}
-  - displayName: "\u6BD2\u6C14DOT"
+  - displayName: "\u6BD2\u6C14\u6301\u7EED\u4F24\u5BB3"
     damageType: 4
     textColor: {r: 0.36, g: 0.95, b: 0.24, a: 1}
     fontSize: 15
@@ -1086,7 +1086,7 @@ MonoBehaviour:
     showKillPrefix: 1
     hitVfx: {fileID: 3758303803480134808, guid: a8cf56a383676984a8f9c8e75c69d8b6, type: 3}
     hitSfx: {fileID: 0}
-  - displayName: "\u97F3\u6CE2AOE"
+  - displayName: "\u97F3\u6CE2\u8303\u56F4\u4F24\u5BB3"
     damageType: 5
     textColor: {r: 0.88, g: 0.46, b: 1, a: 1}
     fontSize: 20
@@ -1189,7 +1189,7 @@ MonoBehaviour:
     disableLensDistortion: 0
   monsterValues:
   - kind: 0
-    displayName: Skeleton
+    displayName: "\u9AB7\u9AC5\u5175"
     cost: 10
     health: 36
     damage: 6
@@ -1198,9 +1198,9 @@ MonoBehaviour:
     attackCooldown: 0.65
     poisonDamage: 0
     color: {r: 0.82, g: 0.86, b: 0.86, a: 1}
-    tag: Cheap swarm
+    tag: "\u4F4E\u8D39\u7FA4\u653B"
   - kind: 1
-    displayName: Venom Bug
+    displayName: "\u6BD2\u866B"
     cost: 15
     health: 26
     damage: 3
@@ -1209,9 +1209,9 @@ MonoBehaviour:
     attackCooldown: 0.5
     poisonDamage: 4
     color: {r: 0.36, g: 0.92, b: 0.32, a: 1}
-    tag: Poison
+    tag: "\u6BD2\u4F24"
   - kind: 2
-    displayName: Archer
+    displayName: "\u5F13\u624B"
     cost: 25
     health: 24
     damage: 7
@@ -1220,9 +1220,9 @@ MonoBehaviour:
     attackCooldown: 1.25
     poisonDamage: 0
     color: {r: 0.95, g: 0.74, b: 0.36, a: 1}
-    tag: Ranged
+    tag: "\u8FDC\u7A0B"
   - kind: 3
-    displayName: Stoneguard
+    displayName: "\u77F3\u536B"
     cost: 40
     health: 115
     damage: 8
@@ -1231,9 +1231,9 @@ MonoBehaviour:
     attackCooldown: 0.9
     poisonDamage: 0
     color: {r: 0.42, g: 0.48, b: 0.52, a: 1}
-    tag: Tank
+    tag: "\u5766\u514B"
   - kind: 4
-    displayName: Hex Priest
+    displayName: "\u5492\u672F\u796D\u53F8"
     cost: 60
     health: 42
     damage: 4
@@ -1242,9 +1242,9 @@ MonoBehaviour:
     attackCooldown: 1.4
     poisonDamage: 0
     color: {r: 0.62, g: 0.44, b: 0.95, a: 1}
-    tag: Anti-heal
+    tag: "\u7981\u7597"
   - kind: 5
-    displayName: Shieldbreaker
+    displayName: "\u7834\u76FE\u8005"
     cost: 70
     health: 56
     damage: 10
@@ -1253,9 +1253,9 @@ MonoBehaviour:
     attackCooldown: 1.05
     poisonDamage: 0
     color: {r: 0.2, g: 0.72, b: 0.95, a: 1}
-    tag: Break shield
+    tag: "\u7834\u76FE"
   - kind: 6
-    displayName: Assassin
+    displayName: "\u523A\u5BA2"
     cost: 80
     health: 34
     damage: 22
@@ -1264,9 +1264,9 @@ MonoBehaviour:
     attackCooldown: 1.25
     poisonDamage: 0
     color: {r: 0.18, g: 0.15, b: 0.2, a: 1}
-    tag: Burst
+    tag: "\u7206\u53D1"
   - kind: 7
-    displayName: Bone King
+    displayName: "\u9AB8\u9AA8\u738B"
     cost: 160
     health: 420
     damage: 20
@@ -1275,10 +1275,10 @@ MonoBehaviour:
     attackCooldown: 0.75
     poisonDamage: 0
     color: {r: 0.9, g: 0.88, b: 0.68, a: 1}
-    tag: Boss
+    tag: "\u9996\u9886"
   skillValues:
   - id: 0
-    displayName: Lightning
+    displayName: "\u96F7\u51FB"
     type: 0
     cost: 50
     cooldown: 6
@@ -1293,9 +1293,9 @@ MonoBehaviour:
     danger: 0.55
     warningColor: {r: 1, g: 0.2, b: 0.12, a: 0.66}
     effectColor: {r: 1, g: 0.95, b: 0.52, a: 0.72}
-    tag: Burst
+    tag: "\u7206\u53D1"
   - id: 1
-    displayName: Frost Field
+    displayName: "\u51B0\u971C\u9886\u57DF"
     type: 1
     cost: 120
     cooldown: 20
@@ -1310,9 +1310,9 @@ MonoBehaviour:
     danger: 0.72
     warningColor: {r: 0.95, g: 0.16, b: 0.14, a: 0.58}
     effectColor: {r: 0.25, g: 0.62, b: 1, a: 0.62}
-    tag: Slow
+    tag: "\u51CF\u901F"
   - id: 2
-    displayName: Anti-Heal
+    displayName: "\u7981\u7597\u8BC5\u5492"
     type: 2
     cost: 120
     cooldown: 18
@@ -1327,9 +1327,9 @@ MonoBehaviour:
     danger: 0.78
     warningColor: {r: 0.95, g: 0.08, b: 0.18, a: 0.6}
     effectColor: {r: 0.72, g: 0.28, b: 0.92, a: 0.62}
-    tag: Anti-heal
+    tag: "\u7981\u7597"
   - id: 3
-    displayName: Shield Brand
+    displayName: "\u7834\u76FE\u70D9\u5370"
     type: 2
     cost: 110
     cooldown: 16
@@ -1344,9 +1344,9 @@ MonoBehaviour:
     danger: 0.74
     warningColor: {r: 0.95, g: 0.12, b: 0.12, a: 0.6}
     effectColor: {r: 0.12, g: 0.82, b: 1, a: 0.62}
-    tag: Break shield
+    tag: "\u7834\u76FE"
   - id: 4
-    displayName: Bone Wall
+    displayName: "\u9AA8\u5899"
     type: 3
     cost: 150
     cooldown: 28
@@ -1361,9 +1361,9 @@ MonoBehaviour:
     danger: 0.68
     warningColor: {r: 0.92, g: 0.18, b: 0.12, a: 0.58}
     effectColor: {r: 0.78, g: 0.76, b: 0.62, a: 1}
-    tag: Terrain
+    tag: "\u5730\u5F62"
   - id: 5
-    displayName: Demon Hand
+    displayName: "\u6076\u9B54\u4E4B\u624B"
     type: 4
     cost: 500
     cooldown: 60
@@ -1378,7 +1378,7 @@ MonoBehaviour:
     danger: 1
     warningColor: {r: 0.32, g: 0, b: 0, a: 0.78}
     effectColor: {r: 0.95, g: 0.1, b: 0.05, a: 0.82}
-    tag: Finisher
+    tag: "\u7EC8\u7ED3"
   uiLayouts: []
   uiTexts: []
   uiButtonGroups: []

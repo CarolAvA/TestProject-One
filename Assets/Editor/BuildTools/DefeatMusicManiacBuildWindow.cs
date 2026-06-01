@@ -37,11 +37,18 @@ namespace ReverseSurvivorPrototype.EditorTools
             BuildAndroidApk(GetOutputRoot());
         }
 
+        [MenuItem("Tools/Defeat Music Maniac/Build/Mac")]
+        public static void BuildMacPlayer()
+        {
+            BuildMacPlayer(GetOutputRoot());
+        }
+
         [MenuItem("Tools/Defeat Music Maniac/Build/Build All")]
         public static void BuildAll()
         {
             var root = GetOutputRoot();
             BuildWindowsPlayer(root);
+            BuildMacPlayer(root);
             BuildAndroidApk(root);
         }
 
@@ -55,10 +62,16 @@ namespace ReverseSurvivorPrototype.EditorTools
             BuildAndroidApk(GetCommandLineOutputRoot());
         }
 
+        public static void BuildMacFromCommandLine()
+        {
+            BuildMacPlayer(GetCommandLineOutputRoot());
+        }
+
         public static void BuildAllFromCommandLine()
         {
             var root = GetCommandLineOutputRoot();
             BuildWindowsPlayer(root);
+            BuildMacPlayer(root);
             BuildAndroidApk(root);
         }
 
@@ -72,7 +85,7 @@ namespace ReverseSurvivorPrototype.EditorTools
             scroll = EditorGUILayout.BeginScrollView(scroll);
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("Defeat Music Maniac Build", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox("Builds use enabled scenes from Build Settings. Outputs default to Builds/PC and Builds/Android.", MessageType.Info);
+            EditorGUILayout.HelpBox("Builds use enabled scenes from Build Settings. Outputs default to Builds/PC, Builds/Mac, and Builds/Android.", MessageType.Info);
 
             EditorGUILayout.Space(8f);
             EditorGUILayout.LabelField("Output Folder", EditorStyles.boldLabel);
@@ -103,16 +116,23 @@ namespace ReverseSurvivorPrototype.EditorTools
                 BuildWindowsPlayer(outputRoot);
             }
 
+            if (GUILayout.Button("Build Mac", GUILayout.Height(34f)))
+            {
+                SaveOutputRoot(outputRoot);
+                BuildMacPlayer(outputRoot);
+            }
+
             if (GUILayout.Button("Build Android APK", GUILayout.Height(34f)))
             {
                 SaveOutputRoot(outputRoot);
                 BuildAndroidApk(outputRoot);
             }
 
-            if (GUILayout.Button("Build PC + Android", GUILayout.Height(38f)))
+            if (GUILayout.Button("Build PC + Mac + Android", GUILayout.Height(38f)))
             {
                 SaveOutputRoot(outputRoot);
                 BuildWindowsPlayer(outputRoot);
+                BuildMacPlayer(outputRoot);
                 BuildAndroidApk(outputRoot);
             }
 
@@ -129,6 +149,13 @@ namespace ReverseSurvivorPrototype.EditorTools
         {
             var outputPath = FullProjectPath(Path.Combine(root, "PC", $"{ProductName}.exe"));
             Build(BuildTarget.StandaloneWindows64, outputPath);
+        }
+
+        private static void BuildMacPlayer(string root)
+        {
+            var outputPath = FullProjectPath(Path.Combine(root, "Mac", $"{ProductName}.app"));
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Standalone, "com.reverseprototype.defeatmusicmaniac");
+            Build(BuildTarget.StandaloneOSX, outputPath);
         }
 
         private static void BuildAndroidApk(string root)

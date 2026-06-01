@@ -66,6 +66,62 @@ def panel_asset(name, size, accent, fill=None, strong=False):
     return save(img, "ui", name)
 
 
+def themed_panel_asset(name, size, accent, fill, secondary=None, stripes=False):
+    secondary = secondary or accent
+    img = Image.new("RGBA", size, (0, 0, 0, 0))
+    w, h = size
+
+    def glow(d):
+        d.rounded_rectangle((8, 8, w - 8, h - 8), radius=7, outline=accent, width=4)
+
+    img.alpha_composite(glow_layer(size, glow, 5))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((5, 5, w - 6, h - 6), radius=7, fill=fill, outline=PAL["ink"], width=4)
+    d.rounded_rectangle((11, 11, w - 12, h - 12), radius=5, outline=(*accent[:3], 165), width=2)
+    d.rectangle((16, 15, w - 16, 18), fill=(*accent[:3], 82))
+    d.rectangle((16, h - 18, w - 16, h - 15), fill=(*secondary[:3], 92))
+    d.polygon([(w - 42, 11), (w - 12, 11), (w - 12, 41)], fill=(*secondary[:3], 56))
+    d.line((18, h - 28, w - 18, h - 28), fill=(*PAL["white"][:3], 22), width=1)
+    if stripes:
+        for x in range(20, w - 20, 18):
+            d.line((x, h - 39, x + 9, h - 30), fill=(*secondary[:3], 80), width=2)
+    return save(img, "ui", name)
+
+
+def selected_frame_asset(name, accent):
+    size = (160, 128)
+    img = Image.new("RGBA", size, (0, 0, 0, 0))
+    w, h = size
+
+    def glow(d):
+        d.rounded_rectangle((8, 8, w - 8, h - 8), radius=8, outline=accent, width=7)
+
+    img.alpha_composite(glow_layer(size, glow, 7))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((5, 5, w - 6, h - 6), radius=8, outline=(*accent[:3], 245), width=4)
+    d.rectangle((18, 8, 58, 13), fill=PAL["white"])
+    d.rectangle((w - 58, h - 13, w - 18, h - 8), fill=PAL["white"])
+    d.rectangle((18, h - 13, 58, h - 8), fill=(*accent[:3], 210))
+    d.rectangle((w - 58, 8, w - 18, 13), fill=(*accent[:3], 210))
+    return save(img, "ui", name)
+
+
+def rhythm_lane_asset(name):
+    size = (256, 48)
+    img = Image.new("RGBA", size, (0, 0, 0, 0))
+    w, h = size
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((4, 4, w - 5, h - 5), radius=6, fill=rgba("#10131b", 230), outline=PAL["ink"], width=3)
+    d.rounded_rectangle((10, 10, w - 11, h - 11), radius=4, outline=(*PAL["cyan"][:3], 110), width=2)
+    for i, color in enumerate((PAL["cyan"], PAL["pink"], PAL["orange"], PAL["green"])):
+        x0 = 16 + i * ((w - 32) // 4)
+        x1 = 16 + (i + 1) * ((w - 32) // 4) - 4
+        d.rectangle((x0, h - 16, x1, h - 11), fill=(*color[:3], 118))
+    for x in range(20, w - 20, 24):
+        d.line((x, 14, x, h - 18), fill=(*PAL["white"][:3], 26), width=1)
+    return save(img, "ui", name)
+
+
 def button_asset(name, size, accent, fill=rgba("#191626", 244)):
     img = Image.new("RGBA", size, (0, 0, 0, 0))
     w, h = size
@@ -203,6 +259,13 @@ def ui_assets():
     panel_asset("ui_rhythm_bar", (256, 96), PAL["orange"], rgba("#15131c", 242), True)
     panel_asset("ui_bubble", (128, 96), PAL["cyan"], rgba("#f2eef6", 236))
     panel_asset("ui_portrait_frame", (128, 128), PAL["yellow"], rgba("#16141d", 236), True)
+    themed_panel_asset("ui_panel_ai", (160, 96), PAL["cyan"], rgba("#111827", 232), PAL["purple"])
+    themed_panel_asset("ui_panel_creator", (160, 96), PAL["orange"], rgba("#201719", 232), PAL["yellow"])
+    themed_panel_asset("ui_panel_battle", (192, 96), PAL["purple"], rgba("#121420", 230), PAL["cyan"])
+    themed_panel_asset("ui_panel_objective", (144, 160), PAL["cyan"], rgba("#12151d", 224), PAL["pink"])
+    themed_panel_asset("ui_panel_action", (160, 256), PAL["pink"], rgba("#17111f", 232), PAL["orange"], True)
+    rhythm_lane_asset("ui_rhythm_lane")
+    selected_frame_asset("ui_selected_frame", PAL["yellow"])
     button_asset("ui_button", (128, 64), PAL["cyan"])
     button_asset("ui_icon_button", (160, 128), PAL["pink"], rgba("#171421", 246))
     icon_slot("ui_icon_slot", PAL["cyan"])

@@ -26,11 +26,13 @@ namespace ReverseSurvivorPrototype
         private CreatorSkillConfig config;
         private Vector2 position;
         private float remaining;
-        private MeshRenderer meshRenderer;
+        private float warningDuration;
+        private Transform fillTransform;
+        private MeshRenderer fillRenderer;
         private SpriteRenderer spriteRenderer;
         private Vector3 spriteBaseScale = Vector3.one;
         private LineRenderer outerRing;
-        private LineRenderer innerRing;
+        private LineRenderer fillRing;
 
         public CreatorSkillConfig Config => config;
         public Vector2 Position => position;
@@ -39,12 +41,9 @@ namespace ReverseSurvivorPrototype
 
         public static SkillWarning Create(CreatorSkillConfig config, Vector2 position)
         {
-            var warningObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var warningObject = new GameObject($"Warning - {config.DisplayName}");
             warningObject.name = $"Warning - {config.DisplayName}";
             warningObject.transform.position = new Vector3(position.x, position.y, -0.45f);
-            warningObject.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            warningObject.transform.localScale = Vector3.one;
-            Object.Destroy(warningObject.GetComponent<CapsuleCollider>());
 
             var warning = warningObject.AddComponent<SkillWarning>();
             warning.Initialize(config, position);
@@ -55,92 +54,136 @@ namespace ReverseSurvivorPrototype
         {
             config = skillConfig;
             position = warningPosition;
-            remaining = config.WarningTime;
-            meshRenderer = GetComponent<MeshRenderer>();
-            meshRenderer.material = VisualFactory.CreateMaterial(config.WarningColor);
-            meshRenderer.enabled = false;
+            warningDuration = Mathf.Max(0.01f, config.WarningTime);
+            remaining = warningDuration;
+            CreateFillDisk();
             spriteRenderer = MusicManiacArtLibrary.AttachSprite(
                 gameObject,
-                MusicManiacArtLibrary.Vfx("vfx_warning_ring"),
-                config.Radius * 2.15f,
+                MusicManiacArtLibrary.LoadSprite($"{SkillVfxLibrary.WarningPrefix(config.Id)}_anim_00"),
+                config.Radius * 2f,
                 20,
                 "Skill Warning Pixel Art",
                 config.WarningColor);
             if (spriteRenderer != null)
             {
                 spriteBaseScale = spriteRenderer.transform.localScale;
-                SpriteSequenceAnimator.Attach(spriteRenderer, "vfx/vfx_warning_ring", 8, 14f);
+                SpriteSequenceAnimator.Attach(spriteRenderer, SkillVfxLibrary.WarningPrefix(config.Id), 12, 18f);
             }
 
-            outerRing = CreateWarningRing("Warning Outer Ring", config.Radius, 0.055f, 48);
-            innerRing = CreateWarningRing("Warning Inner Ring", config.Radius * 0.72f, 0.032f, 40);
+            outerRing = CreateWarningRing("Warning Outer Ring", config.Radius, 0.07f, 72);
+            fillRing = CreateWarningRing("Warning Fill Edge", 0.01f, 0.035f, 56);
         }
 
         private void Update()
         {
             remaining -= Time.deltaTime;
+            var progress = 1f - Mathf.Clamp01(remaining / warningDuration);
             var pulse = 0.55f + Mathf.PingPong(Time.time * (4f + config.Danger * 3f), 0.45f);
             var color = Color.Lerp(config.WarningColor, Color.white, pulse * 0.35f);
-            meshRenderer.material.color = color;
+            UpdateFillDisk(progress, color);
             if (spriteRenderer != null)
             {
-                color.a = Mathf.Lerp(0.42f, 0.92f, pulse);
+                color.a = Mathf.Lerp(0.12f, 0.28f, pulse);
                 spriteRenderer.color = color;
-                spriteRenderer.transform.localScale = spriteBaseScale * (0.9f + pulse * 0.16f);
-                spriteRenderer.transform.Rotate(0f, 0f, Time.deltaTime * (16f + config.Danger * 28f));
+                spriteRenderer.transform.localScale = spriteBaseScale * (0.98f + pulse * 0.04f);
             }
 
-            UpdateWarningLines(color, pulse);
+            UpdateWarningLines(color, pulse, progress);
 
             if (remaining <= 0f)
             {
-                VisualFactory.CreateAnimatedSpriteBurst(position, SkillVfxLibrary.Prefix(config.Id), config.Radius * 2.25f, config.EffectColor, 0.46f, 24, 8, 18f);
+                VisualFactory.CreateAnimatedSpriteBurst(position, SkillVfxLibrary.Prefix(config.Id), config.Radius * 2.35f, config.EffectColor, 0.62f, 24, 12, 22f);
                 MusicManiacAudioSystem.Instance.PlaySkill(config.Id, "cast", position, 1f);
                 GameDirector.Instance.ResolveSkillImpact(config, position);
                 Destroy(gameObject);
             }
         }
 
+        private void CreateFillDisk()
+        {
+            var fillObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            fillObject.name = "Warning Fill Disk";
+            fillObject.transform.SetParent(transform, false);
+            fillObject.transform.localPosition = Vector3.zero;
+            fillObject.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            fillObject.transform.localScale = new Vector3(0.01f, 0.026f, 0.01f);
+            Object.Destroy(fillObject.GetComponent<CapsuleCollider>());
+
+            fillTransform = fillObject.transform;
+            fillRenderer = fillObject.GetComponent<MeshRenderer>();
+            var fillColor = config.WarningColor;
+            fillColor.a = 0.12f;
+            fillRenderer.material = VisualFactory.CreateMaterial(fillColor);
+        }
+
+        private void UpdateFillDisk(float progress, Color color)
+        {
+            if (fillTransform == null || fillRenderer == null)
+            {
+                return;
+            }
+
+            var radius = Mathf.Max(0.015f, config.Radius * Mathf.Clamp01(progress));
+            fillTransform.localScale = new Vector3(radius * 2f, 0.026f, radius * 2f);
+            var fillColor = Color.Lerp(config.WarningColor, color, 0.2f);
+            fillColor.a = Mathf.Lerp(0.12f, 0.34f, Mathf.Clamp01(progress));
+            fillRenderer.material.color = fillColor;
+        }
+
         private LineRenderer CreateWarningRing(string lineName, float radius, float width, int points)
         {
             var lineObject = new GameObject(lineName);
             lineObject.transform.SetParent(transform, false);
-            lineObject.transform.localPosition = new Vector3(0f, 0f, -0.08f);
+            lineObject.transform.localPosition = Vector3.zero;
             var line = lineObject.AddComponent<LineRenderer>();
             line.loop = true;
-            line.useWorldSpace = false;
+            line.useWorldSpace = true;
             line.positionCount = points;
             line.startWidth = width;
             line.endWidth = width;
             line.sortingOrder = 22;
             line.material = VisualFactory.CreateMaterial(config.WarningColor);
-            for (var i = 0; i < points; i++)
-            {
-                var angle = Mathf.PI * 2f * i / points;
-                line.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f));
-            }
-
+            SetRingRadius(line, radius);
             return line;
         }
 
-        private void UpdateWarningLines(Color color, float pulse)
+        private void UpdateWarningLines(Color color, float pulse, float progress)
         {
             var alpha = Mathf.Lerp(0.45f, 0.95f, pulse);
             var outerColor = Color.Lerp(color, Color.white, 0.12f);
             outerColor.a = alpha;
-            var innerColor = Color.Lerp(config.WarningColor, Color.white, 0.35f);
-            innerColor.a = alpha * 0.72f;
+            var fillColor = Color.Lerp(config.WarningColor, Color.white, 0.28f);
+            fillColor.a = Mathf.Lerp(0.28f, 0.9f, Mathf.Clamp01(progress));
 
             if (outerRing != null)
             {
+                SetRingRadius(outerRing, config.Radius);
                 outerRing.material.color = outerColor;
                 outerRing.startWidth = outerRing.endWidth = Mathf.Lerp(0.04f, 0.075f, pulse);
             }
 
-            if (innerRing != null)
+            if (fillRing != null)
             {
-                innerRing.material.color = innerColor;
-                innerRing.startWidth = innerRing.endWidth = Mathf.Lerp(0.022f, 0.046f, pulse);
+                SetRingRadius(fillRing, Mathf.Max(0.02f, config.Radius * Mathf.Clamp01(progress)));
+                fillRing.material.color = fillColor;
+                fillRing.startWidth = fillRing.endWidth = Mathf.Lerp(0.026f, 0.052f, pulse);
+                fillRing.gameObject.SetActive(progress > 0.02f);
+            }
+        }
+
+        private void SetRingRadius(LineRenderer line, float radius)
+        {
+            if (line == null)
+            {
+                return;
+            }
+
+            var points = line.positionCount;
+            var center = new Vector3(position.x, position.y, transform.position.z - 0.08f);
+            for (var i = 0; i < points; i++)
+            {
+                var angle = Mathf.PI * 2f * i / points;
+                line.SetPosition(i, center + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0f));
             }
         }
     }
@@ -302,6 +345,27 @@ namespace ReverseSurvivorPrototype
                     return "vfx/vfx_skill_demon_hand";
                 default:
                     return "vfx/vfx_hit_spark";
+            }
+        }
+
+        public static string WarningPrefix(CreatorSkillId skillId)
+        {
+            switch (skillId)
+            {
+                case CreatorSkillId.LightningStrike:
+                    return "vfx/vfx_warning_lightning";
+                case CreatorSkillId.FrostField:
+                    return "vfx/vfx_warning_frost_field";
+                case CreatorSkillId.AntiHealCurse:
+                    return "vfx/vfx_warning_anti_heal";
+                case CreatorSkillId.ShieldBrand:
+                    return "vfx/vfx_warning_shield_brand";
+                case CreatorSkillId.BoneWall:
+                    return "vfx/vfx_warning_bone_wall";
+                case CreatorSkillId.DemonHand:
+                    return "vfx/vfx_warning_demon_hand";
+                default:
+                    return "vfx/vfx_warning_ring";
             }
         }
     }

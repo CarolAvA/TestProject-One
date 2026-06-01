@@ -818,7 +818,7 @@ namespace ReverseSurvivorPrototype.EditorTools
 
         private static void FillAnimationDefaults(MusicManiacConfigDatabase db)
         {
-            AddOrUpdateAnimation(db, true, MonsterKind.Skeleton, "AI角色", "characters/hero_music_maniac", 1.25f);
+            AddOrUpdateAnimation(db, true, MonsterKind.Skeleton, "音乐疯子", "characters/hero_music_maniac", 1.25f);
             AddOrUpdateAnimation(db, false, MonsterKind.Skeleton, "噪点小怪", "characters/monster_noise_blob", 0.9f);
             AddOrUpdateAnimation(db, false, MonsterKind.VenomBug, "毒液歌者", "characters/monster_venom_singer", 0.85f);
             AddOrUpdateAnimation(db, false, MonsterKind.Archer, "磁带射手", "characters/monster_cassette_thrower", 0.9f);
@@ -844,8 +844,8 @@ namespace ReverseSurvivorPrototype.EditorTools
             AddOrUpdateDamage(db, DamageFeedbackType.Fire, "火焰伤害", new Color(1f, 0.34f, 0.08f), 19);
             AddOrUpdateDamage(db, DamageFeedbackType.Ice, "冰冻伤害", new Color(0.58f, 0.9f, 1f), 18);
             AddOrUpdateDamage(db, DamageFeedbackType.Lightning, "闪电暴击", new Color(0.45f, 0.68f, 1f), 22);
-            AddOrUpdateDamage(db, DamageFeedbackType.Poison, "毒气DOT", new Color(0.36f, 0.95f, 0.24f), 15);
-            AddOrUpdateDamage(db, DamageFeedbackType.Sonic, "音波AOE", new Color(0.88f, 0.46f, 1f), 20);
+            AddOrUpdateDamage(db, DamageFeedbackType.Poison, "毒气持续伤害", new Color(0.36f, 0.95f, 0.24f), 15);
+            AddOrUpdateDamage(db, DamageFeedbackType.Sonic, "音波范围伤害", new Color(0.88f, 0.46f, 1f), 20);
             AddOrUpdateDamage(db, DamageFeedbackType.ShieldBreak, "破盾伤害", new Color(0.22f, 0.86f, 1f), 22);
         }
 
@@ -863,67 +863,78 @@ namespace ReverseSurvivorPrototype.EditorTools
 
         private static void FillMonsterDefaults(MusicManiacConfigDatabase db)
         {
-            AddOrUpdateMonster(db, MonsterKind.Skeleton, "Skeleton", 10f, 36f, 6f, 1.55f, 0.55f, 0.65f, 0f, new Color(0.82f, 0.86f, 0.86f), "Cheap swarm");
-            AddOrUpdateMonster(db, MonsterKind.VenomBug, "Venom Bug", 15f, 26f, 3f, 1.95f, 0.45f, 0.5f, 4f, new Color(0.36f, 0.92f, 0.32f), "Poison");
-            AddOrUpdateMonster(db, MonsterKind.Archer, "Archer", 25f, 24f, 7f, 1.1f, 5.8f, 1.25f, 0f, new Color(0.95f, 0.74f, 0.36f), "Ranged");
-            AddOrUpdateMonster(db, MonsterKind.Stoneguard, "Stoneguard", 40f, 115f, 8f, 0.75f, 0.7f, 0.9f, 0f, new Color(0.42f, 0.48f, 0.52f), "Tank");
-            AddOrUpdateMonster(db, MonsterKind.HexPriest, "Hex Priest", 60f, 42f, 4f, 1f, 4.7f, 1.4f, 0f, new Color(0.62f, 0.44f, 0.95f), "Anti-heal");
-            AddOrUpdateMonster(db, MonsterKind.Shieldbreaker, "Shieldbreaker", 70f, 56f, 10f, 1.35f, 1.2f, 1.05f, 0f, new Color(0.2f, 0.72f, 0.95f), "Break shield");
-            AddOrUpdateMonster(db, MonsterKind.Assassin, "Assassin", 80f, 34f, 22f, 2.55f, 0.55f, 1.25f, 0f, new Color(0.18f, 0.15f, 0.2f), "Burst");
-            AddOrUpdateMonster(db, MonsterKind.BoneKing, "Bone King", 160f, 420f, 20f, 0.85f, 1.15f, 0.75f, 0f, new Color(0.9f, 0.88f, 0.68f), "Boss");
+            AddOrUpdateMonster(db, MonsterKind.Skeleton, "骷髅兵", 10f, 36f, 6f, 1.55f, 0.55f, 0.65f, 0f, new Color(0.82f, 0.86f, 0.86f), "低费群攻");
+            AddOrUpdateMonster(db, MonsterKind.VenomBug, "毒虫", 15f, 26f, 3f, 1.95f, 0.45f, 0.5f, 4f, new Color(0.36f, 0.92f, 0.32f), "毒伤");
+            AddOrUpdateMonster(db, MonsterKind.Archer, "弓手", 25f, 24f, 7f, 1.1f, 5.8f, 1.25f, 0f, new Color(0.95f, 0.74f, 0.36f), "远程");
+            AddOrUpdateMonster(db, MonsterKind.Stoneguard, "石卫", 40f, 115f, 8f, 0.75f, 0.7f, 0.9f, 0f, new Color(0.42f, 0.48f, 0.52f), "坦克");
+            AddOrUpdateMonster(db, MonsterKind.HexPriest, "咒术祭司", 60f, 42f, 4f, 1f, 4.7f, 1.4f, 0f, new Color(0.62f, 0.44f, 0.95f), "禁疗");
+            AddOrUpdateMonster(db, MonsterKind.Shieldbreaker, "破盾者", 70f, 56f, 10f, 1.35f, 1.2f, 1.05f, 0f, new Color(0.2f, 0.72f, 0.95f), "破盾");
+            AddOrUpdateMonster(db, MonsterKind.Assassin, "刺客", 80f, 34f, 22f, 2.55f, 0.55f, 1.25f, 0f, new Color(0.18f, 0.15f, 0.2f), "爆发");
+            AddOrUpdateMonster(db, MonsterKind.BoneKing, "骸骨王", 160f, 420f, 20f, 0.85f, 1.15f, 0.75f, 0f, new Color(0.9f, 0.88f, 0.68f), "首领");
         }
 
         private static void FillSkillDefaults(MusicManiacConfigDatabase db)
         {
-            AddOrUpdateSkill(db, CreatorSkillId.LightningStrike, "Lightning", CreatorSkillType.Damage, 50f, 6f, 0.6f, 0.9f, 0f, 95f, 0f, 1f, 0f, 0f, 0.55f, new Color(1f, 0.2f, 0.12f, 0.66f), new Color(1f, 0.95f, 0.52f, 0.72f), "Burst");
-            AddOrUpdateSkill(db, CreatorSkillId.FrostField, "Frost Field", CreatorSkillType.Control, 120f, 20f, 1.2f, 1.85f, 4f, 18f, 4f, 0.48f, 0f, 0f, 0.72f, new Color(0.95f, 0.16f, 0.14f, 0.58f), new Color(0.25f, 0.62f, 1f, 0.62f), "Slow");
-            AddOrUpdateSkill(db, CreatorSkillId.AntiHealCurse, "Anti-Heal", CreatorSkillType.Curse, 120f, 18f, 1.2f, 1.35f, 0f, 28f, 0f, 1f, 6f, 0f, 0.78f, new Color(0.95f, 0.08f, 0.18f, 0.6f), new Color(0.72f, 0.28f, 0.92f, 0.62f), "Anti-heal");
-            AddOrUpdateSkill(db, CreatorSkillId.ShieldBrand, "Shield Brand", CreatorSkillType.Curse, 110f, 16f, 1f, 1.35f, 0f, 20f, 0f, 1f, 0f, 6f, 0.74f, new Color(0.95f, 0.12f, 0.12f, 0.6f), new Color(0.12f, 0.82f, 1f, 0.62f), "Break shield");
-            AddOrUpdateSkill(db, CreatorSkillId.BoneWall, "Bone Wall", CreatorSkillType.Terrain, 150f, 28f, 1f, 1.3f, 6f, 0f, 0f, 1f, 0f, 0f, 0.68f, new Color(0.92f, 0.18f, 0.12f, 0.58f), new Color(0.78f, 0.76f, 0.62f, 1f), "Terrain");
-            AddOrUpdateSkill(db, CreatorSkillId.DemonHand, "Demon Hand", CreatorSkillType.Finisher, 500f, 60f, 2.5f, 2.55f, 0f, 330f, 0f, 1f, 0f, 0f, 1f, new Color(0.32f, 0f, 0f, 0.78f), new Color(0.95f, 0.1f, 0.05f, 0.82f), "Finisher");
+            AddOrUpdateSkill(db, CreatorSkillId.LightningStrike, "雷击", CreatorSkillType.Damage, 50f, 6f, 0.6f, 0.9f, 0f, 95f, 0f, 1f, 0f, 0f, 0.55f, new Color(1f, 0.2f, 0.12f, 0.66f), new Color(1f, 0.95f, 0.52f, 0.72f), "爆发");
+            AddOrUpdateSkill(db, CreatorSkillId.FrostField, "冰霜领域", CreatorSkillType.Control, 120f, 20f, 1.2f, 1.85f, 4f, 18f, 4f, 0.48f, 0f, 0f, 0.72f, new Color(0.95f, 0.16f, 0.14f, 0.58f), new Color(0.25f, 0.62f, 1f, 0.62f), "减速");
+            AddOrUpdateSkill(db, CreatorSkillId.AntiHealCurse, "禁疗诅咒", CreatorSkillType.Curse, 120f, 18f, 1.2f, 1.35f, 0f, 28f, 0f, 1f, 6f, 0f, 0.78f, new Color(0.95f, 0.08f, 0.18f, 0.6f), new Color(0.72f, 0.28f, 0.92f, 0.62f), "禁疗");
+            AddOrUpdateSkill(db, CreatorSkillId.ShieldBrand, "破盾烙印", CreatorSkillType.Curse, 110f, 16f, 1f, 1.35f, 0f, 20f, 0f, 1f, 0f, 6f, 0.74f, new Color(0.95f, 0.12f, 0.12f, 0.6f), new Color(0.12f, 0.82f, 1f, 0.62f), "破盾");
+            AddOrUpdateSkill(db, CreatorSkillId.BoneWall, "骨墙", CreatorSkillType.Terrain, 150f, 28f, 1f, 1.3f, 6f, 0f, 0f, 1f, 0f, 0f, 0.68f, new Color(0.92f, 0.18f, 0.12f, 0.58f), new Color(0.78f, 0.76f, 0.62f, 1f), "地形");
+            AddOrUpdateSkill(db, CreatorSkillId.DemonHand, "恶魔之手", CreatorSkillType.Finisher, 500f, 60f, 2.5f, 2.55f, 0f, 330f, 0f, 1f, 0f, 0f, 1f, new Color(0.32f, 0f, 0f, 0.78f), new Color(0.95f, 0.1f, 0.05f, 0.82f), "终结");
         }
 
         private static void FillUiDefaults(MusicManiacConfigDatabase db)
         {
-            AddOrUpdateUiLayout(db, "top_status_bar", "顶部状态栏", UiAnchorPreset.TopStretch, new Vector2(0f, -8f), new Vector2(-28f, 58f), new Color(0.02f, 0.018f, 0.028f, 0.92f));
-            AddOrUpdateUiLayout(db, "ai_portrait", "AI头像", UiAnchorPreset.TopLeft, new Vector2(14f, -9f), new Vector2(44f, 44f), new Color(0.08f, 0.04f, 0.12f, 0.95f));
-            AddOrUpdateUiLayout(db, "ai_summary", "AI概要文字", UiAnchorPreset.TopLeft, new Vector2(66f, -8f), new Vector2(270f, 42f), Color.white);
-            AddOrUpdateUiLayout(db, "ai_hp_bar", "AI血条", UiAnchorPreset.TopLeft, new Vector2(346f, -13f), new Vector2(330f, 14f), new Color(0.12f, 0.07f, 0.12f, 0.96f));
-            AddOrUpdateUiLayout(db, "timer_text", "倒计时", UiAnchorPreset.TopCenter, new Vector2(-30f, -13f), new Vector2(110f, 36f), Color.white);
-            AddOrUpdateUiLayout(db, "threat_bar", "威胁条", UiAnchorPreset.TopCenter, new Vector2(140f, -15f), new Vector2(190f, 12f), new Color(0.1f, 0.07f, 0.04f, 0.9f));
-            AddOrUpdateUiLayout(db, "energy_bar", "能量条", UiAnchorPreset.TopRight, new Vector2(-250f, -15f), new Vector2(190f, 14f), new Color(0.09f, 0.05f, 0.12f, 0.95f));
-            AddOrUpdateUiLayout(db, "left_info_panel", "左侧目标面板", UiAnchorPreset.TopLeft, new Vector2(10f, -76f), new Vector2(250f, 272f), new Color(0.025f, 0.024f, 0.034f, 0.88f));
-            AddOrUpdateUiLayout(db, "message_tape", "提示信息框", UiAnchorPreset.BottomStretch, new Vector2(0f, 12f), new Vector2(-24f, 78f), new Color(0.04f, 0.02f, 0.04f, 0.92f));
-            AddOrUpdateUiLayout(db, "right_action_deck", "右侧行动牌组", UiAnchorPreset.TopRight, new Vector2(-10f, -76f), new Vector2(316f, 706f), new Color(0.023f, 0.017f, 0.033f, 0.93f));
-            AddOrUpdateUiLayout(db, "bottom_rhythm_deck", "底部节奏面板", UiAnchorPreset.BottomStretch, new Vector2(0f, 8f), new Vector2(-440f, 184f), new Color(0.018f, 0.017f, 0.024f, 0.94f));
-            AddOrUpdateUiLayout(db, "bd_tooltip", "BD提示框", UiAnchorPreset.BottomLeft, new Vector2(276f, 202f), new Vector2(384f, 168f), new Color(0.025f, 0.03f, 0.035f, 0.96f));
+            AddOrUpdateUiLayout(db, "top_status_bar", "顶部状态栏", UiAnchorPreset.TopStretch, new Vector2(0f, -8f), new Vector2(-28f, 66f), new Color(0.02f, 0.018f, 0.028f, 0.88f));
+            AddOrUpdateUiLayout(db, "ai_portrait", "角色头像", UiAnchorPreset.TopLeft, new Vector2(12f, -8f), new Vector2(38f, 38f), new Color(0.08f, 0.04f, 0.12f, 0.95f));
+            AddOrUpdateUiLayout(db, "ai_summary", "角色概要文字", UiAnchorPreset.TopLeft, new Vector2(58f, -8f), new Vector2(238f, 38f), Color.white);
+            AddOrUpdateUiLayout(db, "ai_hp_bar", "角色血条", UiAnchorPreset.TopLeft, new Vector2(314f, -13f), new Vector2(342f, 15f), new Color(0.12f, 0.07f, 0.12f, 0.96f));
+            AddOrUpdateUiLayout(db, "timer_text", "倒计时", UiAnchorPreset.TopCenter, new Vector2(-130f, -17f), new Vector2(118f, 30f), Color.white);
+            AddOrUpdateUiLayout(db, "threat_bar", "威胁条", UiAnchorPreset.TopLeft, new Vector2(184f, -19f), new Vector2(190f, 13f), new Color(0.1f, 0.07f, 0.04f, 0.9f));
+            AddOrUpdateUiLayout(db, "summon_energy_bar_top", "顶部召唤能量条", UiAnchorPreset.TopLeft, new Vector2(28f, -17f), new Vector2(188f, 13f), new Color(0.1f, 0.04f, 0.09f, 0.95f));
+            AddOrUpdateUiLayout(db, "skill_energy_bar_top", "顶部技能能量条", UiAnchorPreset.TopLeft, new Vector2(244f, -17f), new Vector2(188f, 13f), new Color(0.1f, 0.065f, 0.035f, 0.95f));
+            AddOrUpdateUiLayout(db, "left_info_panel", "左侧目标面板", UiAnchorPreset.TopLeft, new Vector2(10f, -82f), new Vector2(238f, 206f), new Color(0.025f, 0.024f, 0.034f, 0.88f));
+            AddOrUpdateUiLayout(db, "message_tape", "提示信息框", UiAnchorPreset.BottomStretch, new Vector2(0f, 10f), new Vector2(-24f, 62f), new Color(0.04f, 0.02f, 0.04f, 0.9f));
+            AddOrUpdateUiLayout(db, "right_action_deck", "右侧行动牌组", UiAnchorPreset.TopRight, new Vector2(-10f, -82f), new Vector2(432f, 812f), new Color(0.023f, 0.017f, 0.033f, 0.9f));
+            AddOrUpdateUiLayout(db, "bottom_rhythm_deck", "底部节奏面板", UiAnchorPreset.BottomStretch, new Vector2(-26f, 8f), new Vector2(-500f, 166f), new Color(0.018f, 0.017f, 0.024f, 0.9f));
+            AddOrUpdateUiLayout(db, "bd_tooltip", "BD提示框", UiAnchorPreset.BottomLeft, new Vector2(264f, 186f), new Vector2(462f, 244f), new Color(0.025f, 0.03f, 0.035f, 0.96f));
             AddOrUpdateUiLayout(db, "main_menu", "主界面蒙版", UiAnchorPreset.Stretch, Vector2.zero, Vector2.zero, new Color(0.01f, 0.012f, 0.016f, 0.96f));
-            AddOrUpdateUiLayout(db, "main_title", "主界面标题", UiAnchorPreset.TopCenter, new Vector2(0f, -230f), new Vector2(620f, 70f), Color.white);
-            AddOrUpdateUiLayout(db, "main_subtitle", "主界面说明", UiAnchorPreset.TopCenter, new Vector2(0f, -310f), new Vector2(760f, 70f), Color.white);
-            AddOrUpdateUiLayout(db, "main_start_button", "开始游戏按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -410f), new Vector2(220f, 54f), new Color(0.15f, 0.13f, 0.18f, 0.96f));
-            AddOrUpdateUiLayout(db, "main_tip", "主界面提示", UiAnchorPreset.TopCenter, new Vector2(0f, -486f), new Vector2(760f, 48f), Color.white);
+            AddOrUpdateUiLayout(db, "main_promo_image", "主界面宣传图", UiAnchorPreset.TopRight, new Vector2(-96f, -116f), new Vector2(980f, 552f), Color.white);
+            AddOrUpdateUiLayout(db, "main_menu_card", "主界面操作面板", UiAnchorPreset.TopLeft, new Vector2(110f, -128f), new Vector2(560f, 604f), new Color(0.025f, 0.021f, 0.034f, 0.94f));
+            AddOrUpdateUiLayout(db, "main_title", "主界面标题", UiAnchorPreset.TopLeft, new Vector2(32f, -56f), new Vector2(496f, 72f), Color.white);
+            AddOrUpdateUiLayout(db, "main_subtitle", "主界面说明", UiAnchorPreset.TopLeft, new Vector2(32f, -136f), new Vector2(496f, 86f), Color.white);
+            AddOrUpdateUiLayout(db, "main_easy_button", "简单模式按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -280f), new Vector2(496f, 82f), new Color(0.08f, 0.07f, 0.11f, 0.98f));
+            AddOrUpdateUiLayout(db, "main_hard_button", "困难模式按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -376f), new Vector2(496f, 82f), new Color(0.08f, 0.07f, 0.11f, 0.98f));
+            AddOrUpdateUiLayout(db, "main_tip", "主界面提示", UiAnchorPreset.Stretch, new Vector2(16f, -10f), new Vector2(-26f, -18f), Color.white);
+            AddOrUpdateUiLayout(db, "settings_panel", "设置界面蒙版", UiAnchorPreset.Stretch, Vector2.zero, Vector2.zero, new Color(0.005f, 0.006f, 0.009f, 0.94f));
+            AddOrUpdateUiLayout(db, "settings_promo_image", "设置界面宣传图", UiAnchorPreset.TopRight, new Vector2(-116f, -170f), new Vector2(820f, 462f), Color.white);
+            AddOrUpdateUiLayout(db, "settings_menu_card", "设置操作面板", UiAnchorPreset.TopLeft, new Vector2(168f, -206f), new Vector2(500f, 432f), new Color(0.025f, 0.024f, 0.034f, 0.96f));
+            AddOrUpdateUiLayout(db, "settings_resume_button", "设置继续游戏按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -246f), new Vector2(380f, 58f), new Color(0.15f, 0.13f, 0.18f, 0.96f));
+            AddOrUpdateUiLayout(db, "settings_main_button", "设置返回主界面按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -322f), new Vector2(380f, 58f), new Color(0.15f, 0.13f, 0.18f, 0.96f));
             AddOrUpdateUiLayout(db, "result_panel", "结算界面蒙版", UiAnchorPreset.Stretch, Vector2.zero, Vector2.zero, new Color(0.008f, 0.009f, 0.012f, 0.94f));
-            AddOrUpdateUiLayout(db, "result_title", "结算标题", UiAnchorPreset.TopCenter, new Vector2(0f, -260f), new Vector2(680f, 78f), Color.white);
-            AddOrUpdateUiLayout(db, "result_body", "结算正文", UiAnchorPreset.TopCenter, new Vector2(0f, -340f), new Vector2(760f, 92f), Color.white);
-            AddOrUpdateUiLayout(db, "result_restart_button", "重新开始按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -456f), new Vector2(220f, 54f), new Color(0.15f, 0.13f, 0.18f, 0.96f));
+            AddOrUpdateUiLayout(db, "result_promo_image", "结算宣传图", UiAnchorPreset.TopRight, new Vector2(-96f, -116f), new Vector2(980f, 552f), Color.white);
+            AddOrUpdateUiLayout(db, "result_menu_card", "结算操作面板", UiAnchorPreset.TopLeft, new Vector2(120f, -166f), new Vector2(540f, 500f), new Color(0.025f, 0.022f, 0.033f, 0.96f));
+            AddOrUpdateUiLayout(db, "result_title", "结算标题", UiAnchorPreset.TopLeft, new Vector2(34f, -66f), new Vector2(468f, 78f), Color.white);
+            AddOrUpdateUiLayout(db, "result_body", "结算正文", UiAnchorPreset.TopLeft, new Vector2(34f, -156f), new Vector2(468f, 150f), Color.white);
+            AddOrUpdateUiLayout(db, "result_restart_button", "重新开始按钮", UiAnchorPreset.TopCenter, new Vector2(0f, -366f), new Vector2(400f, 58f), new Color(0.15f, 0.13f, 0.18f, 0.96f));
 
-            AddOrUpdateUiText(db, "ai_summary", "AI概要文字", string.Empty, 14, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
-            AddOrUpdateUiText(db, "timer_text", "倒计时文字", string.Empty, 24, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleCenter);
-            AddOrUpdateUiText(db, "objective_text", "目标文字", string.Empty, 15, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
-            AddOrUpdateUiText(db, "message_text", "提示文字", string.Empty, 13, new Color(0.1f, 0.08f, 0.11f, 1f), TextAnchor.UpperLeft);
-            AddOrUpdateUiText(db, "rhythm_header", "节奏标题", string.Empty, 12, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleLeft);
-            AddOrUpdateUiText(db, "rhythm_tracks", "节奏轨道文字", string.Empty, 12, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
-            AddOrUpdateUiText(db, "bd_title", "BD标题", string.Empty, 12, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleLeft);
-            AddOrUpdateUiText(db, "bd_tooltip_text", "BD提示文字", string.Empty, 12, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
-            AddOrUpdateUiText(db, "main_title", "主界面标题文字", "击败音乐疯子", 34, new Color(1f, 0.86f, 0.42f, 1f), TextAnchor.MiddleCenter);
-            AddOrUpdateUiText(db, "main_subtitle", "主界面说明文字", "作为造物主召唤怪物、释放技能，在1分钟内击败AI角色。", 17, new Color(0.78f, 0.88f, 0.92f, 1f), TextAnchor.MiddleCenter);
-            AddOrUpdateUiText(db, "main_tip", "主界面提示文字", "右侧选择怪物或技能，点击战场进行召唤或释放。配置请在Unity顶部菜单 Tools/Defeat Music Maniac/配置编辑器 中修改。", 13, new Color(0.58f, 0.66f, 0.72f, 1f), TextAnchor.MiddleCenter);
-            AddOrUpdateUiText(db, "result_title", "结算标题文字", string.Empty, 34, Color.white, TextAnchor.MiddleCenter);
-            AddOrUpdateUiText(db, "result_body", "结算正文文字", string.Empty, 17, new Color(0.78f, 0.88f, 0.92f, 1f), TextAnchor.MiddleCenter);
+            AddOrUpdateUiText(db, "ai_summary", "角色概要文字", string.Empty, 13, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "timer_text", "倒计时文字", string.Empty, 23, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleCenter);
+            AddOrUpdateUiText(db, "objective_text", "目标文字", string.Empty, 13, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "message_text", "提示文字", string.Empty, 12, new Color(0.1f, 0.08f, 0.11f, 1f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "rhythm_header", "节奏标题", string.Empty, 11, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleLeft);
+            AddOrUpdateUiText(db, "rhythm_tracks", "节奏同步标签", string.Empty, 10, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleLeft);
+            AddOrUpdateUiText(db, "bd_title", "BD标题", string.Empty, 11, new Color(0.93f, 0.94f, 0.92f), TextAnchor.MiddleLeft);
+            AddOrUpdateUiText(db, "bd_tooltip_text", "BD提示文字", string.Empty, 11, new Color(0.93f, 0.94f, 0.92f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "main_title", "主界面标题文字", "击败音乐疯子", 38, new Color(1f, 0.86f, 0.42f, 1f), TextAnchor.MiddleLeft);
+            AddOrUpdateUiText(db, "main_subtitle", "主界面说明文字", "选择挑战模式。召唤怪物、释放造物主技能，在倒计时结束前击败音乐疯子。", 17, new Color(0.78f, 0.88f, 0.92f, 1f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "main_tip", "主界面提示文字", "简单模式适合快速测试；困难模式时间更长、血量更高。进入战斗后在右侧选择怪物或技能，点击战场释放。", 13, new Color(0.58f, 0.66f, 0.72f, 1f), TextAnchor.UpperLeft);
+            AddOrUpdateUiText(db, "result_title", "结算标题文字", string.Empty, 40, Color.white, TextAnchor.MiddleLeft);
+            AddOrUpdateUiText(db, "result_body", "结算正文文字", string.Empty, 17, new Color(0.78f, 0.88f, 0.92f, 1f), TextAnchor.UpperLeft);
 
-            AddOrUpdateButtonGroup(db, "summon_buttons", "召唤怪物按钮组", new Vector2(132f, 50f), new Vector2(76f, 70f), new Vector2(144f, -56f), 2, 10, 9, 8, new Vector2(22f, 0f), new Vector2(28f, 28f));
-            AddOrUpdateButtonGroup(db, "skill_buttons", "造物主技能按钮组", new Vector2(132f, 50f), new Vector2(76f, 46f), new Vector2(144f, -56f), 2, 10, 9, 8, new Vector2(22f, 0f), new Vector2(28f, 28f));
-            AddOrUpdateButtonGroup(db, "bd_buttons", "BD按钮组", new Vector2(58f, 40f), new Vector2(48f, 24f), new Vector2(70f, -48f), 5, 10, 9, 8, Vector2.zero, Vector2.zero);
+            AddOrUpdateButtonGroup(db, "summon_icon_buttons", "召唤怪物按钮组", new Vector2(120f, 96f), new Vector2(74f, 68f), new Vector2(130f, -100f), 3, 12, 10, 9, new Vector2(0f, -3f), new Vector2(50f, 50f));
+            AddOrUpdateButtonGroup(db, "skill_icon_buttons", "造物主技能按钮组", new Vector2(120f, 96f), new Vector2(74f, 34f), new Vector2(130f, -100f), 3, 12, 10, 9, new Vector2(0f, -3f), new Vector2(50f, 50f));
+            AddOrUpdateButtonGroup(db, "bd_buttons", "BD卡牌组", new Vector2(68f, 43f), new Vector2(42f, 18f), new Vector2(73f, -48f), 5, 9, 8, 8, Vector2.zero, Vector2.zero);
         }
 
         private static void AddOrUpdateAnimation(MusicManiacConfigDatabase db, bool isHero, MonsterKind kind, string name, string path, float worldHeight)

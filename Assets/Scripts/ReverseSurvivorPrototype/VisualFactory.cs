@@ -184,9 +184,9 @@ namespace ReverseSurvivorPrototype
                 maxLifetime = seconds;
                 line = gameObject.AddComponent<LineRenderer>();
                 line.loop = true;
-                line.positionCount = 48;
-                line.startWidth = 0.045f;
-                line.endWidth = 0.045f;
+                line.positionCount = 72;
+                line.startWidth = 0.06f;
+                line.endWidth = 0.06f;
                 line.material = CreateMaterial(color);
                 line.useWorldSpace = false;
             }
@@ -237,8 +237,8 @@ namespace ReverseSurvivorPrototype
 
                 if (spriteRenderer != null)
                 {
-                    spriteRenderer.transform.localScale = startScale * Mathf.Lerp(0.65f, 1.55f, progress);
-                    var faded = Color.Lerp(color, Color.white, 0.25f);
+                    spriteRenderer.transform.localScale = startScale * Mathf.Lerp(0.78f, 1.68f, progress);
+                    var faded = Color.Lerp(color, Color.white, 0.34f);
                     faded.a = Mathf.Clamp01(lifetime / Mathf.Max(0.01f, maxLifetime));
                     spriteRenderer.color = faded;
                 }

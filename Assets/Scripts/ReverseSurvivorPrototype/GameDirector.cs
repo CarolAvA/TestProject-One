@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace ReverseSurvivorPrototype
@@ -25,19 +24,33 @@ namespace ReverseSurvivorPrototype
         ShieldWall
     }
 
+    public enum GameMode
+    {
+        Easy,
+        Hard
+    }
+
     public sealed class GameDirector : MonoBehaviour
     {
         public static GameDirector Instance { get; private set; }
 
         public const float ArenaHalfWidth = 30f;
         public const float ArenaHalfHeight = 16f;
-        public const float BattleDuration = 60f;
+        public const float EasyBattleDuration = 60f;
+        public const float HardBattleDuration = 300f;
+        public const int MonsterPopulationCap = 15;
         private const float CameraViewSize = 5.2f;
         private const float CameraPanSpeed = 8.5f;
         private const float CameraFastPanMultiplier = 1.85f;
         private const float CameraFollowLerp = 5.5f;
         private const float CameraEdgeOverscroll = 3.2f;
         private const float MonsterDamageMultiplier = 3.2f;
+        private const float AutoBasicSoldierStartDelay = 2.5f;
+        private const float AutoBasicSoldierBaseInterval = 4.4f;
+        private const float AutoBasicSoldierMinInterval = 2.8f;
+        private const float AutoBasicSoldierMinSpawnRadius = 3.9f;
+        private const float AutoBasicSoldierMaxSpawnRadius = 6.8f;
+        private const int AutoBasicSoldierMaxAlive = 7;
 
         private readonly List<MonsterUnit> monsters = new List<MonsterUnit>();
         private readonly List<ExperienceOrb> experienceOrbs = new List<ExperienceOrb>();
@@ -54,16 +67,22 @@ namespace ReverseSurvivorPrototype
         private MonsterKind selectedMonster = MonsterKind.Skeleton;
         private CreatorSkillId selectedSkill = CreatorSkillId.LightningStrike;
         private bool aimingSkill;
-        private float energy = 85f;
-        private float maxEnergy = 220f;
+        private float summonEnergy = 85f;
+        private float maxSummonEnergy = 220f;
+        private float skillEnergy = 120f;
+        private float maxSkillEnergy = 520f;
         private float battleTimer;
         private float threat;
         private float messageTimer;
-        private string message = "Select a monster, then click the arena to summon.";
+        private string message = "选择怪物后，点击战场进行召唤。";
         private bool finished;
         private bool gameStarted;
         private bool victory;
         private bool restarting;
+        private float battleDuration = EasyBattleDuration;
+        private float heroHealthMultiplier = 1f;
+        private GameMode currentMode = GameMode.Easy;
+        private float autoBasicSoldierTimer = AutoBasicSoldierStartDelay;
         private Vector2 cameraTarget;
         private Vector2 cameraViewCenter;
         private HeroBuild forcedNextBuild = HeroBuild.FlameAura;
@@ -77,15 +96,23 @@ namespace ReverseSurvivorPrototype
         public MonsterKind SelectedMonster => selectedMonster;
         public CreatorSkillId SelectedSkill => selectedSkill;
         public bool IsAimingSkill => aimingSkill;
-        public float Energy => energy;
-        public float MaxEnergy => maxEnergy;
+        public float Energy => summonEnergy;
+        public float MaxEnergy => maxSummonEnergy;
+        public float SummonEnergy => summonEnergy;
+        public float MaxSummonEnergy => maxSummonEnergy;
+        public float SkillEnergy => skillEnergy;
+        public float MaxSkillEnergy => maxSkillEnergy;
         public float BattleTimer => battleTimer;
-        public float RemainingTime => Mathf.Max(0f, BattleDuration - battleTimer);
+        public float BattleDuration => battleDuration;
+        public float RemainingTime => Mathf.Max(0f, battleDuration - battleTimer);
+        public GameMode CurrentMode => currentMode;
+        public string CurrentModeName => currentMode == GameMode.Hard ? "困难模式" : "简单模式";
         public float Threat => threat;
         public string Message => message;
         public bool IsGameStarted => gameStarted;
         public bool IsFinished => finished;
         public bool IsVictory => victory;
+        public bool IsRestarting => restarting;
         public IEnumerable<MonsterKind> ConfiguredMonsterKinds => monsterConfigs.Keys;
         public IEnumerable<CreatorSkillId> ConfiguredSkillIds => skillConfigs.Keys;
 
@@ -99,6 +126,7 @@ namespace ReverseSurvivorPrototype
             }
 
             Instance = this;
+            ApplyMode(GameMode.Easy);
             BuildConfigs();
             DamageFeedbackSystem.Create();
             MusicManiacAudioSystem.Create();
@@ -129,9 +157,11 @@ namespace ReverseSurvivorPrototype
             }
 
             battleTimer += Time.deltaTime;
-            threat = Mathf.Clamp01((hero.Level - 1) * 0.09f + (1f - hero.Health01) * 0.22f + battleTimer / 420f);
-            energy = Mathf.Min(maxEnergy, energy + (8f + threat * 15f) * Time.deltaTime);
+            threat = Mathf.Clamp01((hero.Level - 1) * 0.09f + (1f - hero.Health01) * 0.22f + battleTimer / Mathf.Max(240f, battleDuration * 7f));
+            summonEnergy = Mathf.Min(maxSummonEnergy, summonEnergy + (8f + threat * 15f) * Time.deltaTime);
+            skillEnergy = Mathf.Min(maxSkillEnergy, skillEnergy + (7f + threat * 12f) * Time.deltaTime);
             TickSkillCooldowns();
+            TickBasicPressureSpawner();
 
             if (messageTimer > 0f)
             {
@@ -152,26 +182,49 @@ namespace ReverseSurvivorPrototype
                 hero.PlayDeathAnimation();
                 Finish(true, "造物主胜利！音乐疯子已被击败。");
             }
-            else if (battleTimer >= BattleDuration)
+            else if (battleTimer >= battleDuration)
             {
-                Finish(false, "挑战失败！1分钟内没有击败音乐疯子。");
+                Finish(false, $"挑战失败！{FormatDuration(battleDuration)}内没有击败音乐疯子。");
             }
         }
 
         public void StartGame()
+        {
+            StartGame(GameMode.Easy);
+        }
+
+        public void StartGame(GameMode mode)
         {
             if (gameStarted)
             {
                 return;
             }
 
+            ApplyMode(mode);
             gameStarted = true;
+            autoBasicSoldierTimer = AutoBasicSoldierStartDelay;
             Time.timeScale = 1f;
             FeelImpactSystem.Instance.Play(FeelImpactEvent.GameStart, FeelImpactLevel.Heavy, hero != null ? hero.Position : Vector2.zero, new Color(1f, 0.86f, 0.42f));
-            SetMessage("战斗开始！在1分钟内击败音乐疯子。", 3f);
+            SetMessage($"战斗开始！{CurrentModeName}，在{FormatDuration(battleDuration)}内击败音乐疯子。", 3f);
+        }
+
+        private void ApplyMode(GameMode mode)
+        {
+            currentMode = mode;
+            battleDuration = mode == GameMode.Hard ? HardBattleDuration : EasyBattleDuration;
+            heroHealthMultiplier = mode == GameMode.Hard ? 5f : 1f;
+            if (hero != null)
+            {
+                hero.SetMaxHealthMultiplier(heroHealthMultiplier);
+            }
         }
 
         public void RestartGame()
+        {
+            ReturnToMainMenu();
+        }
+
+        public void ReturnToMainMenu()
         {
             if (restarting)
             {
@@ -180,21 +233,21 @@ namespace ReverseSurvivorPrototype
 
             restarting = true;
             Time.timeScale = 1f;
-            CleanupRuntimeSystemsForReload();
-            if (Instance == this)
-            {
-                Instance = null;
-            }
+            ResetBattleToMainMenu();
+            StartCoroutine(ReleaseRestartingNextFrame());
+        }
 
-            var activeScene = SceneManager.GetActiveScene();
-            var sceneIndex = activeScene.buildIndex >= 0 ? activeScene.buildIndex : 0;
-            SceneManager.LoadScene(sceneIndex, LoadSceneMode.Single);
+        private System.Collections.IEnumerator ReleaseRestartingNextFrame()
+        {
+            yield return null;
+            restarting = false;
         }
 
         private void OnDestroy()
         {
             if (Instance == this)
             {
+                CleanupRuntimeSystemsForReload();
                 Instance = null;
             }
         }
@@ -205,7 +258,7 @@ namespace ReverseSurvivorPrototype
             aimingSkill = false;
             var config = GetMonsterConfig(kind);
             MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SelectMonster, Vector2.zero, 0.9f);
-            SetMessage($"{config.DisplayName} selected. Cost {config.Cost:0} energy.", 2.5f);
+            SetMessage($"已选择{config.DisplayName}，消耗召唤能量 {config.Cost:0}。", 2.5f);
         }
 
         public void SelectSkill(CreatorSkillId skillId)
@@ -214,7 +267,7 @@ namespace ReverseSurvivorPrototype
             aimingSkill = true;
             var config = GetSkillConfig(skillId);
             MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SelectSkill, Vector2.zero, 0.9f);
-            SetMessage($"{config.DisplayName} aiming. Click the arena to warn and cast.", 3f);
+            SetMessage($"正在瞄准{config.DisplayName}，点击战场放置圆形预警。", 3f);
         }
 
         public MonsterConfig GetMonsterConfig(MonsterKind kind)
@@ -229,22 +282,29 @@ namespace ReverseSurvivorPrototype
 
         public bool CanAffordMonster(MonsterKind kind)
         {
-            return energy >= GetMonsterConfig(kind).Cost;
+            return monsters.Count < MonsterPopulationCap && summonEnergy >= GetMonsterConfig(kind).Cost;
         }
 
         public bool CanPrepareSkill(CreatorSkillId skillId)
         {
             var config = GetSkillConfig(skillId);
-            return energy >= config.Cost && GetSkillCooldownRemaining(skillId) <= 0f;
+            return skillEnergy >= config.Cost && GetSkillCooldownRemaining(skillId) <= 0f;
         }
 
         public void SelectMonsterFromHud(MonsterKind kind)
         {
             var config = GetMonsterConfig(kind);
-            if (energy < config.Cost)
+            if (monsters.Count >= MonsterPopulationCap)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, Vector2.zero, 1f);
-                SetMessage($"Not enough soul for {config.DisplayName}. Need {config.Cost:0}.", 1.8f);
+                SetMessage($"人口已满：{monsters.Count}/{MonsterPopulationCap}。", 1.8f);
+                return;
+            }
+
+            if (summonEnergy < config.Cost)
+            {
+                MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, Vector2.zero, 1f);
+                SetMessage($"召唤能量不足，无法召唤{config.DisplayName}。需要 {config.Cost:0}。", 1.8f);
                 return;
             }
 
@@ -255,17 +315,17 @@ namespace ReverseSurvivorPrototype
         {
             var config = GetSkillConfig(skillId);
             var cooldown = GetSkillCooldownRemaining(skillId);
-            if (energy < config.Cost)
+            if (skillEnergy < config.Cost)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, Vector2.zero, 1f);
-                SetMessage($"Not enough soul for {config.DisplayName}. Need {config.Cost:0}.", 1.8f);
+                SetMessage($"技能能量不足，无法释放{config.DisplayName}。需要 {config.Cost:0}。", 1.8f);
                 return;
             }
 
             if (cooldown > 0f)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, Vector2.zero, 1f);
-                SetMessage($"{config.DisplayName} cooling down: {cooldown:0.0}s.", 1.8f);
+                SetMessage($"{config.DisplayName}冷却中：{cooldown:0.0}秒。", 1.8f);
                 return;
             }
 
@@ -294,7 +354,8 @@ namespace ReverseSurvivorPrototype
 
         public void AwardDamage(float damage)
         {
-            energy = Mathf.Min(maxEnergy, energy + damage * 0.08f);
+            summonEnergy = Mathf.Min(maxSummonEnergy, summonEnergy + damage * 0.06f);
+            skillEnergy = Mathf.Min(maxSkillEnergy, skillEnergy + damage * 0.035f);
         }
 
         public void DropExperience(Vector2 position, float value)
@@ -319,7 +380,7 @@ namespace ReverseSurvivorPrototype
         {
             forcedNextBuild = (HeroBuild)Mathf.Clamp(buildIndex, 0, 2);
             hero.OverrideNextBuild(forcedNextBuild);
-            SetMessage($"Hero next build pressure: {forcedNextBuild}", 3f);
+            SetMessage($"已指定音乐疯子下一次流派压力：{HeroBuildName(forcedNextBuild)}。", 3f);
         }
 
         public void ResolveSkillImpact(CreatorSkillConfig config, Vector2 position)
@@ -329,7 +390,7 @@ namespace ReverseSurvivorPrototype
             if (config.Id == CreatorSkillId.BoneWall)
             {
                 CreateBoneWall(position);
-                SetMessage("Bone wall rises. The hero will try to route around it.", 2.5f);
+                SetMessage("骨墙升起，音乐疯子会尝试绕路。", 2.5f);
                 return;
             }
 
@@ -372,14 +433,14 @@ namespace ReverseSurvivorPrototype
                     config.Danger >= 0.75f || config.Damage >= 90f);
                 FeelImpactSystem.Instance.Play(FeelImpactEvent.CreatorSkillHit, FeelImpactSystem.LevelForSkill(config, true), position, config.EffectColor);
                 MusicManiacAudioSystem.Instance.PlaySkill(config.Id, "hit", position, 1f);
-                SetMessage($"{config.DisplayName} hit the hero.", 2f);
+                SetMessage($"{config.DisplayName}命中音乐疯子。", 2f);
             }
             else
             {
-                DamageFeedbackSystem.Instance.ReportSpecialText(position, "MISS", DamageFeedbackType.Physical, false);
+                DamageFeedbackSystem.Instance.ReportSpecialText(position, "未命中", DamageFeedbackType.Physical, false);
                 DamageFeedbackSystem.Instance.ReportHeroBubble(hero, BubbleTalkEvent.DodgedSkill, false);
                 MusicManiacAudioSystem.Instance.PlaySkill(config.Id, "miss", position, 0.85f);
-                SetMessage($"{config.DisplayName} missed. The warning gave the hero room.", 2.4f);
+                SetMessage($"{config.DisplayName}落空，圆形预警给了音乐疯子躲避空间。", 2.4f);
             }
         }
 
@@ -403,21 +464,21 @@ namespace ReverseSurvivorPrototype
 
         private void BuildConfigs()
         {
-            monsterConfigs[MonsterKind.Skeleton] = new MonsterConfig(MonsterKind.Skeleton, "Skeleton", 10f, 36f, 6f * MonsterDamageMultiplier, 1.55f, 0.95f, 0.65f, 0f, new Color(0.82f, 0.86f, 0.86f), "Cheap swarm");
-            monsterConfigs[MonsterKind.VenomBug] = new MonsterConfig(MonsterKind.VenomBug, "Venom Bug", 15f, 26f, 3f * MonsterDamageMultiplier, 1.95f, 0.9f, 0.5f, 4f * MonsterDamageMultiplier, new Color(0.36f, 0.92f, 0.32f), "Poison");
-            monsterConfigs[MonsterKind.Archer] = new MonsterConfig(MonsterKind.Archer, "Archer", 25f, 24f, 7f * MonsterDamageMultiplier, 1.1f, 6.2f, 1.25f, 0f, new Color(0.95f, 0.74f, 0.36f), "Ranged");
-            monsterConfigs[MonsterKind.Stoneguard] = new MonsterConfig(MonsterKind.Stoneguard, "Stoneguard", 40f, 115f, 8f * MonsterDamageMultiplier, 0.75f, 1.1f, 0.9f, 0f, new Color(0.42f, 0.48f, 0.52f), "Tank");
-            monsterConfigs[MonsterKind.HexPriest] = new MonsterConfig(MonsterKind.HexPriest, "Hex Priest", 60f, 42f, 4f * MonsterDamageMultiplier, 1f, 5.1f, 1.4f, 0f, new Color(0.62f, 0.44f, 0.95f), "Anti-heal");
-            monsterConfigs[MonsterKind.Shieldbreaker] = new MonsterConfig(MonsterKind.Shieldbreaker, "Shieldbreaker", 70f, 56f, 10f * MonsterDamageMultiplier, 1.35f, 1.45f, 1.05f, 0f, new Color(0.2f, 0.72f, 0.95f), "Break shield");
-            monsterConfigs[MonsterKind.Assassin] = new MonsterConfig(MonsterKind.Assassin, "Assassin", 80f, 34f, 22f * MonsterDamageMultiplier, 2.55f, 0.95f, 1.25f, 0f, new Color(0.18f, 0.15f, 0.2f), "Burst");
-            monsterConfigs[MonsterKind.BoneKing] = new MonsterConfig(MonsterKind.BoneKing, "Bone King", 160f, 420f, 20f * MonsterDamageMultiplier, 0.85f, 1.65f, 0.75f, 0f, new Color(0.9f, 0.88f, 0.68f), "Boss");
+            monsterConfigs[MonsterKind.Skeleton] = new MonsterConfig(MonsterKind.Skeleton, "骷髅兵", 10f, 36f, 6f * MonsterDamageMultiplier, 1.55f, 0.95f, 0.65f, 0f, new Color(0.82f, 0.86f, 0.86f), "低费群攻");
+            monsterConfigs[MonsterKind.VenomBug] = new MonsterConfig(MonsterKind.VenomBug, "毒虫", 15f, 26f, 3f * MonsterDamageMultiplier, 1.95f, 0.9f, 0.5f, 4f * MonsterDamageMultiplier, new Color(0.36f, 0.92f, 0.32f), "毒伤");
+            monsterConfigs[MonsterKind.Archer] = new MonsterConfig(MonsterKind.Archer, "弓手", 25f, 24f, 7f * MonsterDamageMultiplier, 1.1f, 6.2f, 1.25f, 0f, new Color(0.95f, 0.74f, 0.36f), "远程");
+            monsterConfigs[MonsterKind.Stoneguard] = new MonsterConfig(MonsterKind.Stoneguard, "石卫", 40f, 115f, 8f * MonsterDamageMultiplier, 0.75f, 1.1f, 0.9f, 0f, new Color(0.42f, 0.48f, 0.52f), "坦克");
+            monsterConfigs[MonsterKind.HexPriest] = new MonsterConfig(MonsterKind.HexPriest, "咒术祭司", 60f, 42f, 4f * MonsterDamageMultiplier, 1f, 5.1f, 1.4f, 0f, new Color(0.62f, 0.44f, 0.95f), "禁疗");
+            monsterConfigs[MonsterKind.Shieldbreaker] = new MonsterConfig(MonsterKind.Shieldbreaker, "破盾者", 70f, 56f, 10f * MonsterDamageMultiplier, 1.35f, 1.45f, 1.05f, 0f, new Color(0.2f, 0.72f, 0.95f), "破盾");
+            monsterConfigs[MonsterKind.Assassin] = new MonsterConfig(MonsterKind.Assassin, "刺客", 80f, 34f, 22f * MonsterDamageMultiplier, 2.55f, 0.95f, 1.25f, 0f, new Color(0.18f, 0.15f, 0.2f), "爆发");
+            monsterConfigs[MonsterKind.BoneKing] = new MonsterConfig(MonsterKind.BoneKing, "骸骨王", 160f, 420f, 20f * MonsterDamageMultiplier, 0.85f, 1.65f, 0.75f, 0f, new Color(0.9f, 0.88f, 0.68f), "首领");
 
-            skillConfigs[CreatorSkillId.LightningStrike] = new CreatorSkillConfig(CreatorSkillId.LightningStrike, "Lightning", CreatorSkillType.Damage, 50f, 6f, 0.6f, 0.9f, 0f, 95f, 0f, 1f, 0f, 0f, 0.55f, new Color(1f, 0.2f, 0.12f, 0.66f), new Color(1f, 0.95f, 0.52f, 0.72f), "Burst");
-            skillConfigs[CreatorSkillId.FrostField] = new CreatorSkillConfig(CreatorSkillId.FrostField, "Frost Field", CreatorSkillType.Control, 120f, 20f, 1.2f, 1.85f, 4f, 18f, 4f, 0.48f, 0f, 0f, 0.72f, new Color(0.95f, 0.16f, 0.14f, 0.58f), new Color(0.25f, 0.62f, 1f, 0.62f), "Slow");
-            skillConfigs[CreatorSkillId.AntiHealCurse] = new CreatorSkillConfig(CreatorSkillId.AntiHealCurse, "Anti-Heal", CreatorSkillType.Curse, 120f, 18f, 1.2f, 1.35f, 0f, 28f, 0f, 1f, 6f, 0f, 0.78f, new Color(0.95f, 0.08f, 0.18f, 0.6f), new Color(0.72f, 0.28f, 0.92f, 0.62f), "Anti-heal");
-            skillConfigs[CreatorSkillId.ShieldBrand] = new CreatorSkillConfig(CreatorSkillId.ShieldBrand, "Shield Brand", CreatorSkillType.Curse, 110f, 16f, 1f, 1.35f, 0f, 20f, 0f, 1f, 0f, 6f, 0.74f, new Color(0.95f, 0.12f, 0.12f, 0.6f), new Color(0.12f, 0.82f, 1f, 0.62f), "Break shield");
-            skillConfigs[CreatorSkillId.BoneWall] = new CreatorSkillConfig(CreatorSkillId.BoneWall, "Bone Wall", CreatorSkillType.Terrain, 150f, 28f, 1f, 1.3f, 6f, 0f, 0f, 1f, 0f, 0f, 0.68f, new Color(0.92f, 0.18f, 0.12f, 0.58f), new Color(0.78f, 0.76f, 0.62f, 1f), "Terrain");
-            skillConfigs[CreatorSkillId.DemonHand] = new CreatorSkillConfig(CreatorSkillId.DemonHand, "Demon Hand", CreatorSkillType.Finisher, 500f, 60f, 2.5f, 2.55f, 0f, 330f, 0f, 1f, 0f, 0f, 1f, new Color(0.32f, 0f, 0f, 0.78f), new Color(0.95f, 0.1f, 0.05f, 0.82f), "Finisher");
+            skillConfigs[CreatorSkillId.LightningStrike] = new CreatorSkillConfig(CreatorSkillId.LightningStrike, "雷击", CreatorSkillType.Damage, 50f, 6f, 0.6f, 0.9f, 0f, 95f, 0f, 1f, 0f, 0f, 0.55f, new Color(1f, 0.2f, 0.12f, 0.66f), new Color(1f, 0.95f, 0.52f, 0.72f), "爆发");
+            skillConfigs[CreatorSkillId.FrostField] = new CreatorSkillConfig(CreatorSkillId.FrostField, "冰霜领域", CreatorSkillType.Control, 120f, 20f, 1.2f, 1.85f, 4f, 18f, 4f, 0.48f, 0f, 0f, 0.72f, new Color(0.95f, 0.16f, 0.14f, 0.58f), new Color(0.25f, 0.62f, 1f, 0.62f), "减速");
+            skillConfigs[CreatorSkillId.AntiHealCurse] = new CreatorSkillConfig(CreatorSkillId.AntiHealCurse, "禁疗诅咒", CreatorSkillType.Curse, 120f, 18f, 1.2f, 1.35f, 0f, 28f, 0f, 1f, 6f, 0f, 0.78f, new Color(0.95f, 0.08f, 0.18f, 0.6f), new Color(0.72f, 0.28f, 0.92f, 0.62f), "禁疗");
+            skillConfigs[CreatorSkillId.ShieldBrand] = new CreatorSkillConfig(CreatorSkillId.ShieldBrand, "破盾烙印", CreatorSkillType.Curse, 110f, 16f, 1f, 1.35f, 0f, 20f, 0f, 1f, 0f, 6f, 0.74f, new Color(0.95f, 0.12f, 0.12f, 0.6f), new Color(0.12f, 0.82f, 1f, 0.62f), "破盾");
+            skillConfigs[CreatorSkillId.BoneWall] = new CreatorSkillConfig(CreatorSkillId.BoneWall, "骨墙", CreatorSkillType.Terrain, 150f, 28f, 1f, 1.3f, 6f, 0f, 0f, 1f, 0f, 0f, 0.68f, new Color(0.92f, 0.18f, 0.12f, 0.58f), new Color(0.78f, 0.76f, 0.62f, 1f), "地形");
+            skillConfigs[CreatorSkillId.DemonHand] = new CreatorSkillConfig(CreatorSkillId.DemonHand, "恶魔之手", CreatorSkillType.Finisher, 500f, 60f, 2.5f, 2.55f, 0f, 330f, 0f, 1f, 0f, 0f, 1f, new Color(0.32f, 0f, 0f, 0.78f), new Color(0.95f, 0.1f, 0.05f, 0.82f), "终结");
 
             foreach (var skillId in skillConfigs.Keys)
             {
@@ -433,6 +494,136 @@ namespace ReverseSurvivorPrototype
             CreateHazards();
             CreateHero();
             hud = PrototypeHud.Create(this);
+        }
+
+        private void ResetBattleToMainMenu()
+        {
+            ClearRuntimeBattleObjects();
+            finished = false;
+            gameStarted = false;
+            victory = false;
+            aimingSkill = false;
+            selectedMonster = MonsterKind.Skeleton;
+            selectedSkill = CreatorSkillId.LightningStrike;
+            summonEnergy = 85f;
+            maxSummonEnergy = 220f;
+            skillEnergy = 120f;
+            maxSkillEnergy = 520f;
+            battleTimer = 0f;
+            threat = 0f;
+            messageTimer = 0f;
+            autoBasicSoldierTimer = AutoBasicSoldierStartDelay;
+            forcedNextBuild = HeroBuild.FlameAura;
+            ResetSkillCooldowns();
+            ApplyMode(GameMode.Easy);
+            CreateHero();
+            ResetCameraView();
+            Time.timeScale = 0f;
+            SetMessage("请选择简单模式或困难模式开始挑战。", 999f);
+        }
+
+        private void ClearRuntimeBattleObjects()
+        {
+            DestroyIfAlive(hero);
+            hero = null;
+            DestroyList(monsters);
+            DestroyList(experienceOrbs);
+            DestroyList(hazards);
+            DestroyList(skillWarnings);
+            DestroyList(temporaryWalls);
+            DestroySceneObjects<Projectile>();
+            DestroySceneObjects<RhythmAreaEffect>();
+            DestroySceneObjects<SkillEffectZone>();
+            DestroyRuntimeNamedObjects(
+                "Pulse Ring",
+                "Attack Flash",
+                "Pixel Burst",
+                "Animated Pixel Burst",
+                "Floating Text",
+                "Damage Number",
+                "Hit Spark",
+                "Bubble Talk");
+            if (DamageFeedbackSystem.Instance != null)
+            {
+                DamageFeedbackSystem.Instance.ClearRuntimeFeedback();
+            }
+
+            CreateHazards();
+        }
+
+        private static void DestroyList<T>(List<T> items) where T : MonoBehaviour
+        {
+            foreach (var item in items)
+            {
+                DestroyIfAlive(item);
+            }
+
+            items.Clear();
+        }
+
+        private static void DestroySceneObjects<T>() where T : MonoBehaviour
+        {
+            var objects = FindObjectsByType<T>(FindObjectsSortMode.None);
+            foreach (var item in objects)
+            {
+                DestroyIfAlive(item);
+            }
+        }
+
+        private static void DestroyIfAlive(Component component)
+        {
+            if (component != null)
+            {
+                Destroy(component.gameObject);
+            }
+        }
+
+        private static void DestroyRuntimeNamedObjects(params string[] exactOrPrefixNames)
+        {
+            var allTransforms = FindObjectsByType<Transform>(FindObjectsSortMode.None);
+            foreach (var item in allTransforms)
+            {
+                if (item == null || item.parent != null)
+                {
+                    continue;
+                }
+
+                for (var i = 0; i < exactOrPrefixNames.Length; i++)
+                {
+                    var marker = exactOrPrefixNames[i];
+                    if (item.name == marker || item.name.StartsWith(marker))
+                    {
+                        Destroy(item.gameObject);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void ResetSkillCooldowns()
+        {
+            var skillIds = new List<CreatorSkillId>(skillCooldowns.Keys);
+            foreach (var skillId in skillIds)
+            {
+                skillCooldowns[skillId] = 0f;
+            }
+        }
+
+        private void ResetCameraView()
+        {
+            cameraTarget = Vector2.zero;
+            cameraViewCenter = Vector2.zero;
+            if (mainCamera == null)
+            {
+                return;
+            }
+
+            var position = new Vector3(0f, 0f, -10f);
+            mainCamera.transform.position = position;
+            if (FeelImpactSystem.Instance != null)
+            {
+                FeelImpactSystem.Instance.SetCameraBaseLocalPosition(position);
+            }
         }
 
         private void SetupCamera()
@@ -626,6 +817,7 @@ namespace ReverseSurvivorPrototype
 
             hero = heroObject.AddComponent<HeroController>();
             hero.Initialize(forcedNextBuild);
+            hero.SetMaxHealthMultiplier(heroHealthMultiplier);
         }
 
         private void HandleSummonInput()
@@ -657,32 +849,32 @@ namespace ReverseSurvivorPrototype
             if (Mathf.Abs(position.x) > ArenaHalfWidth || Mathf.Abs(position.y) > ArenaHalfHeight)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SummonInvalid, position, 1f);
-                SetMessage("Cast inside the arena.", 2f);
+                SetMessage("请在战场范围内释放技能。", 2f);
                 return;
             }
 
             var config = GetSkillConfig(skillId);
-            if (energy < config.Cost)
+            if (skillEnergy < config.Cost)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, position, 1f);
-                SetMessage($"Not enough energy for {config.DisplayName}.", 1.8f);
+                SetMessage($"技能能量不足，无法释放{config.DisplayName}。", 1.8f);
                 return;
             }
 
             if (GetSkillCooldownRemaining(skillId) > 0f)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, position, 1f);
-                SetMessage($"{config.DisplayName} is cooling down.", 1.8f);
+                SetMessage($"{config.DisplayName}仍在冷却中。", 1.8f);
                 return;
             }
 
-            energy -= config.Cost;
+            skillEnergy -= config.Cost;
             skillCooldowns[skillId] = config.Cooldown;
             var warning = SkillWarning.Create(config, position);
             skillWarnings.Add(warning);
             MusicManiacAudioSystem.Instance.PlaySkill(config.Id, "warning", position, 1f);
             FeelImpactSystem.Instance.Play(FeelImpactEvent.CreatorSkillCast, FeelImpactSystem.LevelForSkill(config, false), position, config.WarningColor);
-            SetMessage($"{config.DisplayName} warning active. Hero is reacting.", config.WarningTime);
+            SetMessage($"{config.DisplayName}圆形预警已出现，音乐疯子正在躲避。", config.WarningTime);
         }
 
         private void HandleSkillHotkeys()
@@ -697,7 +889,7 @@ namespace ReverseSurvivorPrototype
             {
                 aimingSkill = false;
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiCancel, Vector2.zero, 0.85f);
-                SetMessage("Skill cast canceled.", 1.2f);
+                SetMessage("已取消技能释放。", 1.2f);
             }
         }
 
@@ -779,31 +971,141 @@ namespace ReverseSurvivorPrototype
             }
         }
 
+        private void TickBasicPressureSpawner()
+        {
+            if (hero == null || hero.Health <= 0f)
+            {
+                return;
+            }
+
+            autoBasicSoldierTimer -= Time.deltaTime;
+            if (autoBasicSoldierTimer > 0f)
+            {
+                return;
+            }
+
+            autoBasicSoldierTimer = Mathf.Max(AutoBasicSoldierMinInterval, AutoBasicSoldierBaseInterval - threat * 1.25f);
+            if (monsters.Count >= MonsterPopulationCap)
+            {
+                return;
+            }
+
+            var targetBasicPressure = Mathf.Clamp(2 + Mathf.FloorToInt(battleTimer / 18f) + Mathf.FloorToInt(threat * 2f), 2, AutoBasicSoldierMaxAlive);
+            if (CountMonsters(MonsterKind.Skeleton) >= targetBasicPressure)
+            {
+                return;
+            }
+
+            if (TryFindBasicPressureSpawnPosition(out var position))
+            {
+                AutoSpawnBasicSoldier(position);
+            }
+        }
+
+        private int CountMonsters(MonsterKind kind)
+        {
+            var count = 0;
+            foreach (var monster in monsters)
+            {
+                if (monster != null && monster.Config.Kind == kind)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private bool TryFindBasicPressureSpawnPosition(out Vector2 position)
+        {
+            var center = hero.Position;
+            for (var i = 0; i < 18; i++)
+            {
+                var angle = Random.Range(0f, Mathf.PI * 2f);
+                var radius = Random.Range(AutoBasicSoldierMinSpawnRadius, AutoBasicSoldierMaxSpawnRadius);
+                var candidate = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                candidate.x = Mathf.Clamp(candidate.x, -ArenaHalfWidth + 0.8f, ArenaHalfWidth - 0.8f);
+                candidate.y = Mathf.Clamp(candidate.y, -ArenaHalfHeight + 0.8f, ArenaHalfHeight - 0.8f);
+
+                if (Vector2.Distance(candidate, center) < AutoBasicSoldierMinSpawnRadius)
+                {
+                    continue;
+                }
+
+                if (IsTooCloseToExistingMonster(candidate, 0.85f))
+                {
+                    continue;
+                }
+
+                position = candidate;
+                return true;
+            }
+
+            var fallbackDirection = Random.insideUnitCircle.normalized;
+            if (fallbackDirection.sqrMagnitude < 0.01f)
+            {
+                fallbackDirection = Vector2.right;
+            }
+
+            position = center + fallbackDirection * AutoBasicSoldierMaxSpawnRadius;
+            position.x = Mathf.Clamp(position.x, -ArenaHalfWidth + 0.8f, ArenaHalfWidth - 0.8f);
+            position.y = Mathf.Clamp(position.y, -ArenaHalfHeight + 0.8f, ArenaHalfHeight - 0.8f);
+            return !IsTooCloseToExistingMonster(position, 0.65f);
+        }
+
+        private bool IsTooCloseToExistingMonster(Vector2 position, float minDistance)
+        {
+            foreach (var monster in monsters)
+            {
+                if (monster != null && Vector2.Distance(monster.Position, position) < minDistance)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void AutoSpawnBasicSoldier(Vector2 position)
+        {
+            var config = GetMonsterConfig(MonsterKind.Skeleton);
+            MonsterUnit.Create(config, position);
+            MusicManiacAudioSystem.Instance.PlayMonster(config.Kind, "spawn", position, 0.42f);
+            VisualFactory.CreateAnimatedSpriteBurst(position, "vfx/vfx_spawn_smoke", 0.72f, config.Color, 0.32f, 14, 8, 16f);
+        }
+
         private void TrySummon(MonsterKind kind, Vector2 position)
         {
             if (Mathf.Abs(position.x) > ArenaHalfWidth || Mathf.Abs(position.y) > ArenaHalfHeight)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SummonInvalid, position, 1f);
-                SetMessage("Summon inside the arena.", 2f);
+                SetMessage("请在战场范围内召唤怪物。", 2f);
                 return;
             }
 
             if (Vector2.Distance(position, hero.Position) < 1.25f)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.SummonInvalid, position, 1f);
-                SetMessage("Too close to the hero.", 2f);
+                SetMessage("距离音乐疯子太近，无法召唤。", 2f);
                 return;
             }
 
             var config = GetMonsterConfig(kind);
-            if (energy < config.Cost)
+            if (monsters.Count >= MonsterPopulationCap)
             {
                 MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, position, 1f);
-                SetMessage("Not enough energy.", 1.6f);
+                SetMessage($"人口已满：{monsters.Count}/{MonsterPopulationCap}。", 1.8f);
                 return;
             }
 
-            energy -= config.Cost;
+            if (summonEnergy < config.Cost)
+            {
+                MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.UiError, position, 1f);
+                SetMessage("召唤能量不足。", 1.6f);
+                return;
+            }
+
+            summonEnergy -= config.Cost;
             MonsterUnit.Create(config, position);
             MusicManiacAudioSystem.Instance.PlayMonster(config.Kind, "spawn", position, 1f);
             MusicManiacAudioSystem.Instance.Play(MusicManiacAudioEvent.Summon, position, 0.85f);
@@ -848,13 +1150,36 @@ namespace ReverseSurvivorPrototype
             Time.timeScale = 0f;
             MusicManiacAudioSystem.Instance.PlayResult(didWin);
             FeelImpactSystem.Instance.Play(FeelImpactEvent.GameEnd, didWin ? FeelImpactLevel.Ultimate : FeelImpactLevel.Heavy, hero != null ? hero.Position : Vector2.zero, didWin ? new Color(1f, 0.72f, 0.28f) : new Color(0.45f, 0.65f, 1f));
-            SetMessage($"{result} 按R重新开始。", 999f);
+            SetMessage($"{result} 点击重新开始返回主界面。", 999f);
         }
 
         private void SetMessage(string text, float seconds)
         {
             message = text;
             messageTimer = seconds;
+        }
+
+        public static string HeroBuildName(HeroBuild build)
+        {
+            switch (build)
+            {
+                case HeroBuild.FlameAura:
+                    return "火焰光环";
+                case HeroBuild.Lifesteal:
+                    return "吸血节奏";
+                case HeroBuild.ShieldWall:
+                    return "护盾壁垒";
+                default:
+                    return "基础流派";
+            }
+        }
+
+        public static string FormatDuration(float seconds)
+        {
+            var totalSeconds = Mathf.Max(0, Mathf.RoundToInt(seconds));
+            var minutes = totalSeconds / 60;
+            var remainder = totalSeconds % 60;
+            return minutes > 0 && remainder == 0 ? $"{minutes}分钟" : $"{minutes:00}:{remainder:00}";
         }
 
         private static void CleanupRuntimeSystemsForReload()

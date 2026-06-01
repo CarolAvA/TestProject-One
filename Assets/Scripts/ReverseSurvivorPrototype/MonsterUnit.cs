@@ -76,6 +76,12 @@ namespace ReverseSurvivorPrototype
 
         private void Update()
         {
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                return;
+            }
+
             TickHitReaction();
             TickStatusEffects();
             if (dead)
@@ -99,7 +105,7 @@ namespace ReverseSurvivorPrototype
                 return;
             }
 
-            var hero = GameDirector.Instance.Hero;
+            var hero = director.Hero;
             if (hero == null || hero.Health <= 0f)
             {
                 return;
@@ -138,14 +144,19 @@ namespace ReverseSurvivorPrototype
 
         public void TakeDamage(float amount, DamageFeedbackType feedbackType, Vector2 sourcePosition, bool isDot = false, bool isAoe = false, bool isCritical = false)
         {
-            if (dead)
+            var director = GameDirector.Instance;
+            if (dead || director == null || director.IsRestarting)
             {
                 return;
             }
 
             health -= amount;
             var isKill = health <= 0f;
-            DamageFeedbackSystem.Instance.ReportMonsterDamage(this, amount, feedbackType, sourcePosition, isDot, isAoe, isCritical, isKill);
+            if (DamageFeedbackSystem.Instance != null)
+            {
+                DamageFeedbackSystem.Instance.ReportMonsterDamage(this, amount, feedbackType, sourcePosition, isDot, isAoe, isCritical, isKill);
+            }
+
             if (isKill)
             {
                 Die();
@@ -173,7 +184,11 @@ namespace ReverseSurvivorPrototype
             var antiHeal = Config.Kind == MonsterKind.HexPriest;
             var shieldbreaker = Config.Kind == MonsterKind.Shieldbreaker;
             var damage = Config.Kind == MonsterKind.Assassin ? Config.Damage * 1.8f : Config.Damage;
-            MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "attack", Position, 1f);
+            if (MusicManiacAudioSystem.Instance != null)
+            {
+                MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "attack", Position, 1f);
+            }
+
             hero.TakeDamage(damage, Config.Kind, antiHeal, shieldbreaker);
 
             if (Config.AttackRange > 1.5f)
@@ -258,16 +273,27 @@ namespace ReverseSurvivorPrototype
         {
             dead = true;
             ForceAction(UnitAnimationAction.Death, 0.25f);
-            var hero = GameDirector.Instance.Hero;
+            var director = GameDirector.Instance;
+            if (director == null || director.IsRestarting)
+            {
+                Destroy(gameObject, Config.Kind == MonsterKind.BoneKing ? 0.9f : 0.62f);
+                return;
+            }
+
+            var hero = director.Hero;
             if (hero != null)
             {
                 hero.HealFromKill(Config.Health * 0.08f);
             }
 
-            MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "death", Position, Config.Kind == MonsterKind.BoneKing ? 1.2f : 1f);
+            if (MusicManiacAudioSystem.Instance != null)
+            {
+                MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "death", Position, Config.Kind == MonsterKind.BoneKing ? 1.2f : 1f);
+            }
+
             var xp = Config.Kind == MonsterKind.BoneKing ? 80f : Mathf.Max(8f, Config.Cost * 0.55f);
             VisualFactory.CreateAnimatedSpriteBurst(Position, "vfx/vfx_death_noise", Config.Kind == MonsterKind.BoneKing ? 2.2f : 1.15f, Config.Color, 0.52f, 18, 8, 16f);
-            GameDirector.Instance.DropExperience(Position, xp);
+            director.DropExperience(Position, xp);
             Destroy(gameObject, Config.Kind == MonsterKind.BoneKing ? 0.9f : 0.62f);
         }
 
@@ -280,7 +306,10 @@ namespace ReverseSurvivorPrototype
             }
 
             moveSfxTimer = Config.Kind == MonsterKind.Stoneguard || Config.Kind == MonsterKind.BoneKing ? 0.62f : 0.38f;
-            MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "move", Position, 0.42f);
+            if (MusicManiacAudioSystem.Instance != null)
+            {
+                MusicManiacAudioSystem.Instance.PlayMonster(Config.Kind, "move", Position, 0.42f);
+            }
         }
 
         private void PulseWhenReady()

@@ -56,35 +56,35 @@ namespace ReverseSurvivorPrototype
                 var elementCount = (LightningUnlocked ? 1 : 0) + (IceUnlocked ? 1 : 0) + (FireUnlocked ? 1 : 0) + (PoisonUnlocked ? 1 : 0);
                 if (elementCount >= 3)
                 {
-                    return "Multi-Element Chord";
+                    return "多元素和弦";
                 }
 
                 if (SonicBurstUnlocked && HeavyBeatUnlocked)
                 {
-                    return "Sonic Shock";
+                    return "音波震击";
                 }
 
                 if (PoisonUnlocked && PoisonTrailUnlocked)
                 {
-                    return "Poison Requiem";
+                    return "毒性安魂曲";
                 }
 
                 if (FireUnlocked)
                 {
-                    return "Fire Drum";
+                    return "火焰鼓点";
                 }
 
                 if (LightningUnlocked)
                 {
-                    return "Lightning Staccato";
+                    return "闪电断奏";
                 }
 
                 if (IceUnlocked)
                 {
-                    return "Frost Melody";
+                    return "冰霜旋律";
                 }
 
-                return "Single-Tone Bullet";
+                return "单音弹幕";
             }
         }
 
@@ -93,13 +93,13 @@ namespace ReverseSurvivorPrototype
             get
             {
                 var builder = new StringBuilder();
-                AppendTag(builder, LightningUnlocked, "Lightning");
-                AppendTag(builder, IceUnlocked, "Ice");
-                AppendTag(builder, FireUnlocked, "Fire");
-                AppendTag(builder, PoisonUnlocked, "Poison");
-                AppendTag(builder, SonicBurstUnlocked, "Sonic");
-                AppendTag(builder, PoisonTrailUnlocked || IceTrailUnlocked || FireTrailUnlocked, "Trail");
-                return builder.Length == 0 ? "Basic" : builder.ToString();
+                AppendTag(builder, LightningUnlocked, "闪电");
+                AppendTag(builder, IceUnlocked, "冰霜");
+                AppendTag(builder, FireUnlocked, "火焰");
+                AppendTag(builder, PoisonUnlocked, "毒性");
+                AppendTag(builder, SonicBurstUnlocked, "音波");
+                AppendTag(builder, PoisonTrailUnlocked || IceTrailUnlocked || FireTrailUnlocked, "路径");
+                return builder.Length == 0 ? "基础" : builder.ToString();
             }
         }
 
@@ -399,6 +399,9 @@ namespace ReverseSurvivorPrototype
         public bool IsNew { get; }
         public bool IsCore => Rarity == BDRarity.Core || Category == BDCategory.CoreBuild;
         public int SortPriority => Category == BDCategory.CoreBuild ? 0 : Category == BDCategory.Projectile ? 1 : Category == BDCategory.PathArea ? 2 : Category == BDCategory.AOE ? 3 : Category == BDCategory.Rhythm ? 4 : Category == BDCategory.BaseAttribute ? 5 : 6;
+        public string CategoryName => DisplayCategory(Category);
+        public string RarityName => DisplayRarity(Rarity);
+        public string ElementName => DisplayElement(Element);
 
         public static AIBDDisplayData FromCard(AIHeroBDCard card, int level, bool isNew)
         {
@@ -501,26 +504,26 @@ namespace ReverseSurvivorPrototype
         {
             switch (card)
             {
-                case AIHeroBDCard.ProjectileSpeed: return "SPD";
-                case AIHeroBDCard.RhythmSpeed: return "BPM";
-                case AIHeroBDCard.Damage: return "DMG";
+                case AIHeroBDCard.ProjectileSpeed: return "速";
+                case AIHeroBDCard.RhythmSpeed: return "拍";
+                case AIHeroBDCard.Damage: return "伤";
                 case AIHeroBDCard.ProjectileCount: return "+1";
-                case AIHeroBDCard.BigNote: return "BIG";
-                case AIHeroBDCard.Pierce: return "PEN";
-                case AIHeroBDCard.LightningBullet: return "LGT";
-                case AIHeroBDCard.IceBullet: return "ICE";
-                case AIHeroBDCard.FireBullet: return "FIR";
-                case AIHeroBDCard.PoisonBullet: return "TOX";
-                case AIHeroBDCard.PoisonTrail: return "PTH";
-                case AIHeroBDCard.IceTrail: return "ITH";
-                case AIHeroBDCard.FireTrail: return "FTH";
-                case AIHeroBDCard.AreaDuration: return "DUR";
-                case AIHeroBDCard.SonicBurst: return "AOE";
-                case AIHeroBDCard.AoeRange: return "RNG";
-                case AIHeroBDCard.Syncopation: return "SYN";
-                case AIHeroBDCard.HeavyBeat: return "LOW";
-                case AIHeroBDCard.EchoBeat: return "ECO";
-                default: return "BD";
+                case AIHeroBDCard.BigNote: return "大";
+                case AIHeroBDCard.Pierce: return "穿";
+                case AIHeroBDCard.LightningBullet: return "雷";
+                case AIHeroBDCard.IceBullet: return "冰";
+                case AIHeroBDCard.FireBullet: return "火";
+                case AIHeroBDCard.PoisonBullet: return "毒";
+                case AIHeroBDCard.PoisonTrail: return "毒径";
+                case AIHeroBDCard.IceTrail: return "冰径";
+                case AIHeroBDCard.FireTrail: return "火径";
+                case AIHeroBDCard.AreaDuration: return "延";
+                case AIHeroBDCard.SonicBurst: return "波";
+                case AIHeroBDCard.AoeRange: return "域";
+                case AIHeroBDCard.Syncopation: return "切";
+                case AIHeroBDCard.HeavyBeat: return "重";
+                case AIHeroBDCard.EchoBeat: return "回";
+                default: return "构";
             }
         }
 
@@ -542,25 +545,25 @@ namespace ReverseSurvivorPrototype
         {
             switch (card)
             {
-                case AIHeroBDCard.ProjectileSpeed: return $"Projectile speed +{level * 10}%.";
-                case AIHeroBDCard.RhythmSpeed: return $"Attack rhythm interval reduced by about {level * 8}%.";
-                case AIHeroBDCard.Damage: return $"All AI damage +{level * 10}%.";
-                case AIHeroBDCard.ProjectileCount: return $"Each beat fires {level} extra projectile(s).";
-                case AIHeroBDCard.Pierce: return $"Projectiles pierce {level} target(s).";
-                case AIHeroBDCard.LightningBullet: return $"High notes can become lightning, bouncing between nearby units.";
-                case AIHeroBDCard.IceBullet: return $"Some notes become ice bullets and briefly freeze targets.";
-                case AIHeroBDCard.FireBullet: return $"Low or offset notes can explode into fire AOE.";
-                case AIHeroBDCard.PoisonBullet: return $"Some notes poison targets for sustained damage.";
-                case AIHeroBDCard.PoisonTrail: return $"Projectiles leave poison trail zones behind.";
-                case AIHeroBDCard.IceTrail: return $"Projectiles leave slowing frost trail zones behind.";
-                case AIHeroBDCard.FireTrail: return $"Projectiles leave burning trail zones behind.";
-                case AIHeroBDCard.AreaDuration: return $"Trail areas last +{level * 0.5f:0.0}s.";
-                case AIHeroBDCard.SonicBurst: return "Low beats trigger an AOE sonic pulse around the hero.";
-                case AIHeroBDCard.AoeRange: return $"AOE radius +{level * 15}%.";
-                case AIHeroBDCard.Syncopation: return "Extra high-note bullets are inserted between main beats.";
-                case AIHeroBDCard.HeavyBeat: return "Every fourth beat becomes a heavier low-note attack.";
-                case AIHeroBDCard.EchoBeat: return "Main attacks create a delayed echo pulse.";
-                default: return "Improves the AI build.";
+                case AIHeroBDCard.ProjectileSpeed: return $"子弹速度 +{level * 10}%。";
+                case AIHeroBDCard.RhythmSpeed: return $"攻击节奏间隔约缩短 {level * 8}%。";
+                case AIHeroBDCard.Damage: return $"全部角色伤害 +{level * 10}%。";
+                case AIHeroBDCard.ProjectileCount: return $"每个节拍额外发射 {level} 枚子弹。";
+                case AIHeroBDCard.Pierce: return $"子弹可穿透 {level} 个目标。";
+                case AIHeroBDCard.LightningBullet: return "高音节拍可转为闪电子弹，并在近距离单位间弹射。";
+                case AIHeroBDCard.IceBullet: return "部分节拍转为冰霜子弹，短暂冻结目标。";
+                case AIHeroBDCard.FireBullet: return "低音或错位节拍会爆成火焰范围伤害。";
+                case AIHeroBDCard.PoisonBullet: return "部分节拍使目标中毒，造成持续伤害。";
+                case AIHeroBDCard.PoisonTrail: return "子弹飞行后留下毒气路径区域。";
+                case AIHeroBDCard.IceTrail: return "子弹飞行后留下减速冰霜路径。";
+                case AIHeroBDCard.FireTrail: return "子弹飞行后留下燃烧路径。";
+                case AIHeroBDCard.AreaDuration: return $"路径区域持续时间 +{level * 0.5f:0.0}秒。";
+                case AIHeroBDCard.SonicBurst: return "低音节拍会在音乐疯子周围触发音波范围脉冲。";
+                case AIHeroBDCard.AoeRange: return $"范围半径 +{level * 15}%。";
+                case AIHeroBDCard.Syncopation: return "主节拍之间插入额外高音子弹。";
+                case AIHeroBDCard.HeavyBeat: return "每第四拍变为更重的低音攻击。";
+                case AIHeroBDCard.EchoBeat: return "主攻击会生成延迟回声脉冲。";
+                default: return "强化当前角色构筑。";
             }
         }
 
@@ -568,11 +571,11 @@ namespace ReverseSurvivorPrototype
         {
             switch (GetCategory(card))
             {
-                case BDCategory.Projectile: return "Adds a distinct element tone to the rhythm track.";
-                case BDCategory.PathArea: return "Adds a sustained layer under the main beat.";
-                case BDCategory.AOE: return "Adds low-frequency pulse hits.";
-                case BDCategory.Rhythm: return "Changes beat density or accent timing.";
-                default: return "Makes the base rhythm sound stronger or faster.";
+                case BDCategory.Projectile: return "为节奏轨加入清晰的元素音色。";
+                case BDCategory.PathArea: return "在主节拍下方加入持续铺底声。";
+                case BDCategory.AOE: return "加入低频脉冲打击感。";
+                case BDCategory.Rhythm: return "改变节拍密度或重音时机。";
+                default: return "让基础节奏更强或更快。";
             }
         }
 
@@ -580,11 +583,11 @@ namespace ReverseSurvivorPrototype
         {
             switch (GetCategory(card))
             {
-                case BDCategory.Projectile: return "Element-colored projectile and hit feedback.";
-                case BDCategory.PathArea: return "Visible trail left along projectile paths.";
-                case BDCategory.AOE: return "Expanding pulse ring around the AI hero.";
-                case BDCategory.Rhythm: return "More frequent or accented beat flashes.";
-                default: return "Projectile scale, speed, or impact intensity changes.";
+                case BDCategory.Projectile: return "元素色子弹与命中特效。";
+                case BDCategory.PathArea: return "子弹路径上留下可见区域。";
+                case BDCategory.AOE: return "音乐疯子周围展开脉冲圆环。";
+                case BDCategory.Rhythm: return "更密集或更重的节拍闪光。";
+                default: return "子弹大小、速度或命中力度变化。";
             }
         }
 
@@ -592,11 +595,11 @@ namespace ReverseSurvivorPrototype
         {
             switch (card)
             {
-                case AIHeroBDCard.ProjectileCount: return "Adds one more projectile per beat.";
-                case AIHeroBDCard.Damage: return "Increases global damage again.";
-                case AIHeroBDCard.RhythmSpeed: return "Further shortens beat interval.";
-                case AIHeroBDCard.AreaDuration: return "Trail zones persist longer.";
-                default: return "Strengthens this BD or unlocks a stronger variant later.";
+                case AIHeroBDCard.ProjectileCount: return "每拍再增加一枚子弹。";
+                case AIHeroBDCard.Damage: return "继续提升全局伤害。";
+                case AIHeroBDCard.RhythmSpeed: return "进一步缩短节拍间隔。";
+                case AIHeroBDCard.AreaDuration: return "路径区域持续更久。";
+                default: return "强化当前构筑，或后续解锁更强变体。";
             }
         }
 
@@ -604,15 +607,55 @@ namespace ReverseSurvivorPrototype
         {
             switch (card)
             {
-                case AIHeroBDCard.LightningBullet: return "Spread summons out; avoid dense clusters.";
-                case AIHeroBDCard.IceBullet: return "Use many low-value units to split control.";
+                case AIHeroBDCard.LightningBullet: return "分散召唤，避免怪物密集被弹射。";
+                case AIHeroBDCard.IceBullet: return "用低费单位分摊控制效果。";
                 case AIHeroBDCard.FireBullet:
-                case AIHeroBDCard.FireTrail: return "Avoid clustered low-health summons.";
+                case AIHeroBDCard.FireTrail: return "避免低血量单位扎堆。";
                 case AIHeroBDCard.PoisonBullet:
-                case AIHeroBDCard.PoisonTrail: return "Do not let elites sit in poison for long.";
-                case AIHeroBDCard.SonicBurst: return "Summon from range and punish after the pulse.";
-                case AIHeroBDCard.RhythmSpeed: return "Wait for end-lag before committing fragile units.";
-                default: return "Use timing, spacing, and tougher units to reduce value.";
+                case AIHeroBDCard.PoisonTrail: return "不要让精英单位长时间站在毒区。";
+                case AIHeroBDCard.SonicBurst: return "从远处召唤，等音波后再压上。";
+                case AIHeroBDCard.RhythmSpeed: return "等待收招窗口，再投入脆弱单位。";
+                default: return "用时机、站位和更肉的单位降低收益。";
+            }
+        }
+
+        private static string DisplayCategory(BDCategory category)
+        {
+            switch (category)
+            {
+                case BDCategory.BaseAttribute: return "基础属性";
+                case BDCategory.Projectile: return "弹体";
+                case BDCategory.PathArea: return "路径区域";
+                case BDCategory.AOE: return "范围";
+                case BDCategory.Rhythm: return "节奏";
+                case BDCategory.Status: return "状态";
+                case BDCategory.Special: return "特殊";
+                case BDCategory.CoreBuild: return "核心流派";
+                default: return "构筑";
+            }
+        }
+
+        private static string DisplayRarity(BDRarity rarity)
+        {
+            switch (rarity)
+            {
+                case BDRarity.Common: return "普通";
+                case BDRarity.Rare: return "稀有";
+                case BDRarity.Epic: return "史诗";
+                case BDRarity.Core: return "核心";
+                default: return "普通";
+            }
+        }
+
+        private static string DisplayElement(ElementModule element)
+        {
+            switch (element)
+            {
+                case ElementModule.Lightning: return "闪电";
+                case ElementModule.Ice: return "冰霜";
+                case ElementModule.Fire: return "火焰";
+                case ElementModule.Poison: return "毒性";
+                default: return "无元素";
             }
         }
     }
@@ -623,25 +666,25 @@ namespace ReverseSurvivorPrototype
         {
             switch (card)
             {
-                case AIHeroBDCard.ProjectileSpeed: return "Swift Ballistics";
-                case AIHeroBDCard.RhythmSpeed: return "Quick Tempo";
-                case AIHeroBDCard.Damage: return "Amplified Tone";
-                case AIHeroBDCard.ProjectileCount: return "Double Note";
-                case AIHeroBDCard.BigNote: return "Big Note";
-                case AIHeroBDCard.Pierce: return "Piercing Tone";
-                case AIHeroBDCard.LightningBullet: return "Lightning Note";
-                case AIHeroBDCard.IceBullet: return "Ice Crystal Note";
-                case AIHeroBDCard.FireBullet: return "Fire Drum Note";
-                case AIHeroBDCard.PoisonBullet: return "Poison Whisper";
-                case AIHeroBDCard.PoisonTrail: return "Poison Trail";
-                case AIHeroBDCard.IceTrail: return "Frost Trail";
-                case AIHeroBDCard.FireTrail: return "Burning Trail";
-                case AIHeroBDCard.AreaDuration: return "Sustain Layer";
-                case AIHeroBDCard.SonicBurst: return "Sonic Burst";
-                case AIHeroBDCard.AoeRange: return "Amplified Radius";
-                case AIHeroBDCard.Syncopation: return "Syncopation";
-                case AIHeroBDCard.HeavyBeat: return "Heavy Beat";
-                case AIHeroBDCard.EchoBeat: return "Echo Beat";
+                case AIHeroBDCard.ProjectileSpeed: return "迅捷弹道";
+                case AIHeroBDCard.RhythmSpeed: return "快速节拍";
+                case AIHeroBDCard.Damage: return "增幅音色";
+                case AIHeroBDCard.ProjectileCount: return "双重音符";
+                case AIHeroBDCard.BigNote: return "巨大音符";
+                case AIHeroBDCard.Pierce: return "穿透音色";
+                case AIHeroBDCard.LightningBullet: return "闪电音符";
+                case AIHeroBDCard.IceBullet: return "冰晶音符";
+                case AIHeroBDCard.FireBullet: return "火焰鼓点";
+                case AIHeroBDCard.PoisonBullet: return "毒性低语";
+                case AIHeroBDCard.PoisonTrail: return "毒气路径";
+                case AIHeroBDCard.IceTrail: return "冰霜路径";
+                case AIHeroBDCard.FireTrail: return "燃烧路径";
+                case AIHeroBDCard.AreaDuration: return "延音层";
+                case AIHeroBDCard.SonicBurst: return "音波爆发";
+                case AIHeroBDCard.AoeRange: return "扩音半径";
+                case AIHeroBDCard.Syncopation: return "切分节奏";
+                case AIHeroBDCard.HeavyBeat: return "重拍";
+                case AIHeroBDCard.EchoBeat: return "回声拍";
                 default: return card.ToString();
             }
         }
