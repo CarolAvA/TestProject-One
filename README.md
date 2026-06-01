@@ -118,6 +118,8 @@ ProjectSettings/         # Unity 项目配置
 
 项目包含完整的设计文档，位于 `Docs/` 目录：
 
+![设计文档顺序关系图](Docs/design_docs_relationship.png)
+
 | 文档 | 内容 |
 |---|---|
 | `fan_xingcunzhe_zaowuzhu_shilian_gdd.md` | 核心玩法策划案（GDD） |
